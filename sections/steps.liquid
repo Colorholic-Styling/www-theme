@@ -1,0 +1,106 @@
+{% schema %}
+{
+  "name": "Steps / process",
+  "settings": [
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "Theme",
+      "options": [
+        {
+          "value": "light",
+          "label": "Light"
+        },
+        {
+          "value": "cream",
+          "label": "Cream"
+        },
+        {
+          "value": "dark",
+          "label": "Dark"
+        },
+        {
+          "value": "accent",
+          "label": "Accent"
+        }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor"
+    },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "bodyHtml",
+      "label": "Body"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% assign steps = section.settings.steps | default: section.blocks %}
+
+<section class="section section--{{ section.settings.theme | escape }}"{% if section.settings.anchor != blank %} id="{{ section.settings.anchor | escape }}"{% endif %}>
+  <div class="section__inner">
+    {% render '/snippets/section-head', settings: section.settings %}
+
+    <ol class="steps">
+      {% for row in steps %}
+      {% assign step = row.settings | default: row %}
+      <li class="steps__item">
+        <span class="steps__index" aria-hidden="true">{{ step.index | default: forloop.index }}</span>
+        <div class="steps__text">
+          {% if step.name != blank %}<h3 class="steps__name">{{ step.name | escape }}</h3>{% endif %}
+          {% if step.description != blank %}<p>{{ step.description | escape }}</p>{% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>

@@ -1,0 +1,139 @@
+{% schema %}
+{
+  "name": "Services / price list",
+  "settings": [
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "Theme",
+      "options": [
+        {
+          "value": "light",
+          "label": "Light"
+        },
+        {
+          "value": "cream",
+          "label": "Cream"
+        },
+        {
+          "value": "dark",
+          "label": "Dark"
+        },
+        {
+          "value": "accent",
+          "label": "Accent"
+        }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor"
+    },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "bodyHtml",
+      "label": "Body"
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Footnote"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "service",
+      "name": "Service",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "text",
+          "id": "duration",
+          "label": "Duration"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "href",
+          "label": "Booking link"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% assign services = section.settings.services | default: section.blocks %}
+
+<section class="section section--{{ section.settings.theme | escape }}"{% if section.settings.anchor != blank %} id="{{ section.settings.anchor | escape }}"{% endif %}>
+  <div class="section__inner">
+    {% render '/snippets/section-head', settings: section.settings %}
+
+    <ul class="price-list">
+      {% for row in services %}
+      {% assign service = row.settings | default: row %}
+      <li class="price-list__item">
+        <div class="price-list__text">
+          <h3 class="price-list__name">{{ service.name | escape }}</h3>
+          {% if service.description != blank %}<p class="price-list__desc">{{ service.description | escape }}</p>{% endif %}
+          {% if service.duration != blank %}<p class="price-list__meta">{{ service.duration | escape }}</p>{% endif %}
+        </div>
+        <div class="price-list__side">
+          {% if service.price != blank %}<p class="price-list__price">{{ service.price | escape }}</p>{% endif %}
+          {% if service.href != blank %}
+          <a class="button button--ghost button--sm" href="{{ service.href | escape }}" target="_blank" rel="noopener noreferrer">{% if service.label != blank %}{{ service.label | escape }}{% else %}{{ t.book | escape }}{% endif %}</a>
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+
+    {% if section.settings.note != blank %}<p class="section__note">{{ section.settings.note | escape }}</p>{% endif %}
+  </div>
+</section>

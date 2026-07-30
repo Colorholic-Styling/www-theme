@@ -1,0 +1,125 @@
+{% schema %}
+{
+  "name": "Gallery",
+  "settings": [
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "Theme",
+      "options": [
+        {
+          "value": "light",
+          "label": "Light"
+        },
+        {
+          "value": "cream",
+          "label": "Cream"
+        },
+        {
+          "value": "dark",
+          "label": "Dark"
+        },
+        {
+          "value": "accent",
+          "label": "Accent"
+        }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor"
+    },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns",
+      "options": [
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "bodyHtml",
+      "label": "Body"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "picture",
+      "name": "Picture",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "src",
+          "label": "Picture"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% assign pictures = section.settings.pictures | default: section.blocks %}
+
+<section class="section section--{{ section.settings.theme | escape }}"{% if section.settings.anchor != blank %} id="{{ section.settings.anchor | escape }}"{% endif %}>
+  <div class="section__inner">
+    {% render '/snippets/section-head', settings: section.settings %}
+
+    <ul class="gallery gallery--{{ section.settings.columns | default: 3 }}">
+      {% for row in pictures %}
+      {% assign picture = row.settings | default: row %}
+      <li class="gallery__item">
+        <figure>
+          <img src="{{ picture.src | escape }}" alt="{{ picture.caption | escape }}" loading="lazy">
+          {% if picture.caption != blank %}<figcaption>{{ picture.caption | escape }}</figcaption>{% endif %}
+        </figure>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>

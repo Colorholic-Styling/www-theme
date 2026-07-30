@@ -1,0 +1,10 @@
+<header class="article__head section section--cream">
+  <div class="section__inner section__inner--narrow">
+    <p class="article__kicker"><a href="{{ site.newsHref | escape }}">{{ t.backToNews | escape }}</a></p>
+    <h1 class="article__title">{{ article.title | escape }}</h1>
+    {% if article.dateIso != blank %}
+    <p class="article__meta"><time datetime="{{ article.dateIso | escape }}">{{ article.dateText | escape }}</time></p>
+    {% endif %}
+    {% if article.summary != blank %}<p class="article__summary">{{ article.summary | escape }}</p>{% endif %}
+  </div>
+</header>

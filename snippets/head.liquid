@@ -1,0 +1,16 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ meta.title | escape }}</title>
+{% if meta.description != blank %}<meta name="description" content="{{ meta.description | escape }}">{% endif %}
+{% if meta.canonical != blank %}<link rel="canonical" href="{{ meta.canonical | escape }}">{% endif %}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ site.brand | escape }}">
+<meta property="og:title" content="{{ meta.title | escape }}">
+{% if meta.description != blank %}<meta property="og:description" content="{{ meta.description | escape }}">{% endif %}
+{% if meta.canonical != blank %}<meta property="og:url" content="{{ meta.canonical | escape }}">{% endif %}
+{% if meta.image != blank %}<meta property="og:image" content="{{ meta.image | escape }}">{% endif %}
+<meta name="twitter:card" content="{% if meta.image != blank %}summary_large_image{% else %}summary{% endif %}">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#1f1b22">
+{% for language in languages %}<link rel="alternate" hreflang="{{ language.code | escape }}" href="{{ canonicalOrigin | escape }}{{ language.href | escape }}">
+{% endfor %}<link rel="stylesheet" href="/assets/site.css?v={{ assetVersion | escape }}">

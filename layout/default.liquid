@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="{{ lang | escape }}">
+<head>{% render '/snippets/head' %}</head>
+<body>
+  <a class="skip-link" href="#content">{{ t.skipToContent | escape }}</a>
+  {% render '/snippets/header' %}
+  <main id="content" class="site-main">
+    {% block content %}{% endblock %}
+  </main>
+  {% render '/snippets/footer' %}
+</body>
+</html>

@@ -1,0 +1,109 @@
+{% schema %}
+{
+  "name": "Logos",
+  "settings": [
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "Theme",
+      "options": [
+        {
+          "value": "light",
+          "label": "Light"
+        },
+        {
+          "value": "cream",
+          "label": "Cream"
+        },
+        {
+          "value": "dark",
+          "label": "Dark"
+        },
+        {
+          "value": "accent",
+          "label": "Accent"
+        }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor"
+    },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "bodyHtml",
+      "label": "Body"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Logo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "src",
+          "label": "Picture"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name"
+        },
+        {
+          "type": "url",
+          "id": "href",
+          "label": "Link"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% assign logos = section.settings.logos | default: section.blocks %}
+
+<section class="section section--{{ section.settings.theme | escape }}"{% if section.settings.anchor != blank %} id="{{ section.settings.anchor | escape }}"{% endif %}>
+  <div class="section__inner">
+    {% render '/snippets/section-head', settings: section.settings %}
+
+    <ul class="logos">
+      {% for row in logos %}
+      {% assign logo = row.settings | default: row %}
+      <li class="logos__item">
+        {% if logo.href != blank %}<a href="{{ logo.href | escape }}" target="_blank" rel="noopener noreferrer">{% endif %}
+        <img src="{{ logo.src | escape }}" alt="{{ logo.name | escape }}" loading="lazy">
+        {% if logo.href != blank %}</a>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>

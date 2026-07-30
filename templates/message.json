@@ -1,0 +1,11 @@
+{
+  "layout": "default",
+  "sections": {
+    "message": {
+      "type": "message-page"
+    }
+  },
+  "order": [
+    "message"
+  ]
+}

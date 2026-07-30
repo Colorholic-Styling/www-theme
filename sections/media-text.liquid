@@ -1,0 +1,105 @@
+{% schema %}
+{
+  "name": "Image + text",
+  "settings": [
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "Theme",
+      "options": [
+        {
+          "value": "light",
+          "label": "Light"
+        },
+        {
+          "value": "cream",
+          "label": "Cream"
+        },
+        {
+          "value": "dark",
+          "label": "Dark"
+        },
+        {
+          "value": "accent",
+          "label": "Accent"
+        }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor"
+    },
+    {
+      "type": "checkbox",
+      "id": "mediaFirst",
+      "label": "Image before text",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "bodyHtml",
+      "label": "Body"
+    },
+    {
+      "type": "image_picker",
+      "id": "picture",
+      "label": "Picture"
+    },
+    {
+      "type": "text",
+      "id": "pictureAlt",
+      "label": "Picture alt text"
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Caption"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link"
+    }
+  ]
+}
+{% endschema %}
+
+{% assign link_label = section.settings.link_label | default: section.settings.link.label %}
+{% assign link_href = section.settings.link_url | default: section.settings.link.href %}
+
+<section class="section section--{{ section.settings.theme | escape }}"{% if section.settings.anchor != blank %} id="{{ section.settings.anchor | escape }}"{% endif %}>
+  <div class="section__inner">
+    <div class="split{% unless section.settings.mediaFirst %} split--reverse{% endunless %}">
+      {% if section.settings.picture != blank %}
+      <figure class="split__media">
+        <img src="{{ section.settings.picture | escape }}" alt="{{ section.settings.pictureAlt | escape }}" loading="lazy">
+        {% if section.settings.caption != blank %}<figcaption>{{ section.settings.caption | escape }}</figcaption>{% endif %}
+      </figure>
+      {% endif %}
+
+      <div class="split__text">
+        {% if section.settings.eyebrow != blank %}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}
+        {% if section.settings.title != blank %}<h2 class="section__title">{{ section.settings.title | escape }}</h2>{% endif %}
+        {% if section.settings.bodyHtml != blank %}<div class="prose">{{ section.settings.bodyHtml }}</div>{% endif %}
+        {% if link_label != blank and link_href != blank %}<p><a class="link-more" href="{{ link_href | escape }}">{{ link_label | escape }}</a></p>{% endif %}
+      </div>
+    </div>
+  </div>
+</section>

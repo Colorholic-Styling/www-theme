@@ -1,0 +1,132 @@
+{% schema %}
+{
+  "name": "Testimonials",
+  "settings": [
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "Theme",
+      "options": [
+        {
+          "value": "light",
+          "label": "Light"
+        },
+        {
+          "value": "cream",
+          "label": "Cream"
+        },
+        {
+          "value": "dark",
+          "label": "Dark"
+        },
+        {
+          "value": "accent",
+          "label": "Accent"
+        }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor"
+    },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "bodyHtml",
+      "label": "Body"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name"
+        },
+        {
+          "type": "text",
+          "id": "role",
+          "label": "Role"
+        },
+        {
+          "type": "image_picker",
+          "id": "picture",
+          "label": "Picture"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Rating",
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% assign testimonials = section.settings.testimonials | default: section.blocks %}
+
+<section class="section section--{{ section.settings.theme | escape }}"{% if section.settings.anchor != blank %} id="{{ section.settings.anchor | escape }}"{% endif %}>
+  <div class="section__inner">
+    {% render '/snippets/section-head', settings: section.settings %}
+
+    <ul class="card-grid card-grid--3">
+      {% for row in testimonials %}
+      {% assign item = row.settings | default: row %}
+      {% assign stars = item.stars.size | default: item.rating %}
+      <li class="quote">
+        {% if stars > 0 %}
+        <p class="quote__stars" aria-label="{{ stars }}/5">{% for star in (1..stars) %}<span aria-hidden="true">★</span>{% endfor %}</p>
+        {% endif %}
+        <blockquote class="quote__text">{{ item.quote | escape }}</blockquote>
+        <div class="quote__author">
+          {% if item.picture != blank %}<img class="quote__avatar" src="{{ item.picture | escape }}" alt="" loading="lazy" width="48" height="48">{% endif %}
+          <div>
+            {% if item.name != blank %}<p class="quote__name">{{ item.name | escape }}</p>{% endif %}
+            {% if item.role != blank %}<p class="quote__role">{{ item.role | escape }}</p>{% endif %}
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>

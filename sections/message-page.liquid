@@ -1,0 +1,8 @@
+<section class="section section--cream message">
+  <div class="section__inner section__inner--narrow">
+    <p class="message__code">{{ code | escape }}</p>
+    <h1 class="message__title">{{ heading | escape }}</h1>
+    <p class="message__body">{{ message | escape }}</p>
+    <a class="button button--primary" href="{{ site.homeHref | escape }}">{{ t.backHome | escape }}</a>
+  </div>
+</section>

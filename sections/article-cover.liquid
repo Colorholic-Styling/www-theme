@@ -1,0 +1,5 @@
+{% if article.picture != blank %}
+<figure class="article__cover">
+  <img src="{{ article.picture | escape }}" alt="{{ article.title | escape }}">
+</figure>
+{% endif %}

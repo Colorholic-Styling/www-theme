@@ -1,0 +1,125 @@
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "Theme",
+      "options": [
+        {
+          "value": "light",
+          "label": "Light"
+        },
+        {
+          "value": "cream",
+          "label": "Cream"
+        },
+        {
+          "value": "dark",
+          "label": "Dark"
+        },
+        {
+          "value": "accent",
+          "label": "Accent"
+        }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor"
+    },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "bodyHtml",
+      "label": "Body"
+    },
+    {
+      "type": "text",
+      "id": "primary_label",
+      "label": "Primary button label"
+    },
+    {
+      "type": "url",
+      "id": "primary_url",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Secondary button label"
+    },
+    {
+      "type": "url",
+      "id": "secondary_url",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "image_picker",
+      "id": "picture",
+      "label": "Picture"
+    },
+    {
+      "type": "text",
+      "id": "pictureAlt",
+      "label": "Picture alt text"
+    }
+  ]
+}
+{% endschema %}
+
+{% assign primary_label = section.settings.primary_label | default: section.settings.primary.label %}
+{% assign primary_href = section.settings.primary_url | default: section.settings.primary.href %}
+{% assign secondary_label = section.settings.secondary_label | default: section.settings.secondary.label %}
+{% assign secondary_href = section.settings.secondary_url | default: section.settings.secondary.href %}
+
+<section class="hero hero--{{ section.settings.theme | escape }}{% if section.settings.picture != blank %} hero--with-media{% endif %}"{% if section.settings.anchor != blank %} id="{{ section.settings.anchor | escape }}"{% endif %}>
+  <div class="hero__inner">
+    <div class="hero__text{% if section.settings.align == 'center' %} hero__text--center{% endif %}">
+      {% if section.settings.eyebrow != blank %}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}
+      {% if section.settings.title != blank %}<h1 class="hero__title">{{ section.settings.title | escape }}</h1>{% endif %}
+      {% if section.settings.bodyHtml != blank %}<div class="hero__body prose">{{ section.settings.bodyHtml }}</div>{% endif %}
+      {% if primary_label != blank and primary_href != blank or secondary_label != blank and secondary_href != blank %}
+      <p class="hero__actions">
+        {% if primary_label != blank and primary_href != blank %}<a class="button button--primary" href="{{ primary_href | escape }}">{{ primary_label | escape }}</a>{% endif %}
+        {% if secondary_label != blank and secondary_href != blank %}<a class="button button--ghost" href="{{ secondary_href | escape }}">{{ secondary_label | escape }}</a>{% endif %}
+      </p>
+      {% endif %}
+      <span class="spectrum" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    </div>
+
+    {% if section.settings.picture != blank %}
+    <div class="hero__media">
+      <img src="{{ section.settings.picture | escape }}" alt="{{ section.settings.pictureAlt | escape }}" width="960" height="1200">
+    </div>
+    {% endif %}
+  </div>
+</section>

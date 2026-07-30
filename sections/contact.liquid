@@ -1,0 +1,171 @@
+{% schema %}
+{
+  "name": "Contact details",
+  "settings": [
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "Theme",
+      "options": [
+        {
+          "value": "light",
+          "label": "Light"
+        },
+        {
+          "value": "cream",
+          "label": "Cream"
+        },
+        {
+          "value": "dark",
+          "label": "Dark"
+        },
+        {
+          "value": "accent",
+          "label": "Accent"
+        }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor"
+    },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "bodyHtml",
+      "label": "Body"
+    },
+    {
+      "type": "textarea",
+      "id": "address",
+      "label": "Address"
+    },
+    {
+      "type": "textarea",
+      "id": "hours",
+      "label": "Opening hours"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email"
+    },
+    {
+      "type": "url",
+      "id": "whatsappHref",
+      "label": "WhatsApp link"
+    },
+    {
+      "type": "text",
+      "id": "map_label",
+      "label": "Map link label"
+    },
+    {
+      "type": "url",
+      "id": "map_url",
+      "label": "Map link"
+    },
+    {
+      "type": "text",
+      "id": "booking_label",
+      "label": "Booking button label"
+    },
+    {
+      "type": "url",
+      "id": "booking_url",
+      "label": "Booking link"
+    }
+  ]
+}
+{% endschema %}
+
+{%- comment -%}
+  The CMS projection pre-splits address/hours and pre-builds the tel:/mailto:
+  hrefs; a JSON template supplies the plain textarea and address instead, so
+  each value falls back to the raw setting.
+{%- endcomment -%}
+{% assign address_lines = section.settings.addressLines %}
+{% if address_lines == blank and section.settings.address != blank %}{% assign address_lines = section.settings.address | split: "\n" %}{% endif %}
+{% assign hours_lines = section.settings.hoursLines %}
+{% if hours_lines == blank and section.settings.hours != blank %}{% assign hours_lines = section.settings.hours | split: "\n" %}{% endif %}
+{% assign phone_href = section.settings.phoneHref %}
+{% if phone_href == blank and section.settings.phone != blank %}{% assign phone_href = section.settings.phone | prepend: 'tel:' %}{% endif %}
+{% assign email_href = section.settings.emailHref %}
+{% if email_href == blank and section.settings.email != blank %}{% assign email_href = section.settings.email | prepend: 'mailto:' %}{% endif %}
+{% assign map_label = section.settings.map_label | default: section.settings.map.label %}
+{% assign map_href = section.settings.map_url | default: section.settings.map.href %}
+{% assign booking_label = section.settings.booking_label | default: section.settings.booking.label %}
+{% assign booking_href = section.settings.booking_url | default: section.settings.booking.href %}
+
+<section class="section section--{{ section.settings.theme | escape }}"{% if section.settings.anchor != blank %} id="{{ section.settings.anchor | escape }}"{% endif %}>
+  <div class="section__inner">
+    {% render '/snippets/section-head', settings: section.settings %}
+
+    <div class="contact">
+      {% if address_lines.size > 0 %}
+      <div class="contact__col">
+        <h3 class="contact__heading">{{ t.address | escape }}</h3>
+        <address class="contact__address">
+          {% for line in address_lines %}{{ line | strip | escape }}<br>{% endfor %}
+        </address>
+        {% if map_label != blank and map_href != blank %}<a class="link-more" href="{{ map_href | escape }}" target="_blank" rel="noopener noreferrer">{{ map_label | escape }}</a>{% endif %}
+      </div>
+      {% endif %}
+
+      {% if hours_lines.size > 0 %}
+      <div class="contact__col">
+        <h3 class="contact__heading">{{ t.hours | escape }}</h3>
+        <ul class="contact__list">
+          {% for line in hours_lines %}<li>{{ line | strip | escape }}</li>{% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      {% if section.settings.phone != blank or section.settings.email != blank or section.settings.whatsappHref != blank or booking_label != blank and booking_href != blank %}
+      <div class="contact__col">
+        <h3 class="contact__heading">{{ t.contact | escape }}</h3>
+        <ul class="contact__list">
+          {% if section.settings.phone != blank %}<li><a href="{{ phone_href | escape }}">{{ section.settings.phone | escape }}</a></li>{% endif %}
+          {% if section.settings.email != blank %}<li><a href="{{ email_href | escape }}">{{ section.settings.email | escape }}</a></li>{% endif %}
+          {% if section.settings.whatsappHref != blank %}<li><a href="{{ section.settings.whatsappHref | escape }}" target="_blank" rel="noopener noreferrer">WhatsApp</a></li>{% endif %}
+        </ul>
+        {% if booking_label != blank and booking_href != blank %}
+        <a class="button button--primary button--sm" href="{{ booking_href | escape }}" target="_blank" rel="noopener noreferrer">{{ booking_label | escape }}</a>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>

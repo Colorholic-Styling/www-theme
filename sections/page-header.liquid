@@ -1,0 +1,19 @@
+{% schema %}
+{
+  "name": "Page header",
+  "settings": []
+}
+{% endschema %}
+
+{%- comment -%}
+  Route furniture: the title comes from `page`, which the route projects with
+  pageHeader(). There is nothing here for a JSON template or editor to set.
+{%- endcomment -%}
+{% if page.showTitle and page.title != blank %}
+<header class="page-head section section--cream">
+  <div class="section__inner">
+    <h1 class="page-head__title">{{ page.title | escape }}</h1>
+    {% if page.subtitle != blank %}<p class="page-head__subtitle">{{ page.subtitle | escape }}</p>{% endif %}
+  </div>
+</header>
+{% endif %}

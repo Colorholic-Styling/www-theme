@@ -1,0 +1,16 @@
+{% schema %}
+{
+  "name": "Page content",
+  "settings": []
+}
+{% endschema %}
+
+{%- comment -%}
+  Each block template path is built by src/blocks.ts from the BLOCK_TYPES
+  allowlist; never render a path taken directly from CMS editor content.
+  Projected blocks are section-shaped so their data is available through the
+  same `section.settings` contract as sections declared in a JSON template.
+{%- endcomment -%}
+{% for item in page.blocks %}
+  {% render item.template, section: item %}
+{% endfor %}

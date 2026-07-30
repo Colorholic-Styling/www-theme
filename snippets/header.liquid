@@ -1,0 +1,51 @@
+{%- comment -%}
+  The mobile menu is a CSS-only checkbox toggle: no JavaScript, which is what
+  keeps the site's CSP free of 'unsafe-inline' (src/security.ts). A <details>
+  element cannot serve here — it hides every non-<summary> child when closed,
+  so the nav would vanish on desktop too.
+{%- endcomment -%}
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="brand" href="{{ site.homeHref | escape }}">
+      {% if site.logo != blank %}
+        <img class="brand__logo" src="{{ site.logo | escape }}" alt="{{ site.brand | escape }}" width="160" height="40">
+      {% else %}
+        <span class="brand__name">{{ site.brand | escape }}</span>
+      {% endif %}
+    </a>
+
+    <input class="nav-checkbox" type="checkbox" id="nav-toggle" aria-label="{{ t.menu | escape }}">
+    <label class="nav-toggle" for="nav-toggle" aria-hidden="true">
+      <span class="nav-toggle__bar"></span>
+      <span class="nav-toggle__bar"></span>
+      <span class="nav-toggle__bar"></span>
+    </label>
+
+    <nav class="site-nav" aria-label="{{ t.menu | escape }}">
+      <ul class="site-nav__list">
+        {% for item in site.nav %}
+        <li class="site-nav__item">
+          <a class="site-nav__link{% if item.active %} is-active{% endif %}"
+             href="{{ item.href | escape }}"
+             {% if item.external %}target="_blank" rel="noopener noreferrer"{% endif %}
+             {% if item.active %}aria-current="page"{% endif %}>{{ item.label | escape }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+
+      <div class="site-nav__aside">
+        <ul class="lang-switch">
+          {% for language in languages %}
+          <li><a class="lang-switch__link{% if language.active %} is-active{% endif %}"
+                 href="{{ language.href | escape }}"
+                 lang="{{ language.code | escape }}"
+                 {% if language.active %}aria-current="true"{% endif %}>{{ language.label | escape }}</a></li>
+          {% endfor %}
+        </ul>
+        {% if site.booking.has %}
+        <a class="button button--primary button--sm" href="{{ site.booking.href | escape }}" target="_blank" rel="noopener noreferrer">{{ site.booking.label | escape }}</a>
+        {% endif %}
+      </div>
+    </nav>
+  </div>
+</header>

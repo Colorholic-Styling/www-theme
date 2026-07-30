@@ -1,0 +1,44 @@
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div class="site-footer__brand">
+      <p class="site-footer__name">{{ site.brand | escape }}</p>
+      {% if site.tagline != blank %}<p class="site-footer__tagline">{{ site.tagline | escape }}</p>{% endif %}
+      {% if site.footerNoteHtml != blank %}<div class="site-footer__note">{{ site.footerNoteHtml }}</div>{% endif %}
+    </div>
+
+    {% if site.address.size > 0 or site.hours.size > 0 %}
+    <div class="site-footer__col">
+      {% if site.address.size > 0 %}
+      <h2 class="site-footer__heading">{{ t.address | escape }}</h2>
+      <address class="site-footer__address">
+        {% for line in site.address %}{{ line | escape }}<br>{% endfor %}
+      </address>
+      {% endif %}
+      {% if site.hours.size > 0 %}
+      <h2 class="site-footer__heading">{{ t.hours | escape }}</h2>
+      <ul class="site-footer__list">
+        {% for line in site.hours %}<li>{{ line | escape }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if site.phone != blank or site.email != blank or site.social.size > 0 or site.footerLinks.size > 0 %}
+    <div class="site-footer__col">
+      <h2 class="site-footer__heading">{{ t.contact | escape }}</h2>
+      <ul class="site-footer__list">
+        {% if site.phone != blank %}<li><a href="{{ site.phoneHref | escape }}">{{ site.phone | escape }}</a></li>{% endif %}
+        {% if site.email != blank %}<li><a href="{{ site.emailHref | escape }}">{{ site.email | escape }}</a></li>{% endif %}
+        {% for item in site.social %}
+        <li><a href="{{ item.href | escape }}" target="_blank" rel="noopener noreferrer">{{ item.name | escape }}</a></li>
+        {% endfor %}
+        {% for item in site.footerLinks %}
+        <li><a href="{{ item.href | escape }}"{% if item.external %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ item.label | escape }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+
+  <p class="site-footer__legal">© {{ site.year }} {{ site.brand | escape }}</p>
+</footer>

@@ -1,0 +1,15 @@
+{
+  "layout": "default",
+  "sections": {
+    "header": {
+      "type": "news-header"
+    },
+    "results": {
+      "type": "news-results"
+    }
+  },
+  "order": [
+    "header",
+    "results"
+  ]
+}

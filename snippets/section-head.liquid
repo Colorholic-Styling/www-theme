@@ -1,0 +1,11 @@
+{%- comment -%}
+  Rendered with `settings: section.settings` — either a CMS block view model
+  projected into `page.blocks`, or settings declared by a JSON template.
+{%- endcomment -%}
+{% if settings.eyebrow != blank or settings.title != blank or settings.bodyHtml != blank %}
+<div class="section__head{% if settings.align == 'center' %} section__head--center{% endif %}">
+  {% if settings.eyebrow != blank %}<p class="eyebrow">{{ settings.eyebrow | escape }}</p>{% endif %}
+  {% if settings.title != blank %}<h2 class="section__title">{{ settings.title | escape }}</h2>{% endif %}
+  {% if settings.bodyHtml != blank %}<div class="section__intro prose">{{ settings.bodyHtml }}</div>{% endif %}
+</div>
+{% endif %}

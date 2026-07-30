@@ -1,0 +1,25 @@
+<section class="section section--light">
+  <div class="section__inner">
+    {% if hasArticles %}
+    <ul class="card-grid card-grid--3">
+      {% for article in articles %}
+      <li class="card">
+        {% if article.picture != blank %}
+        <a class="card__media" href="{{ article.href | escape }}">
+          <img src="{{ article.picture | escape }}" alt="{{ article.title | escape }}" loading="lazy">
+        </a>
+        {% endif %}
+        <div class="card__body">
+          {% if article.dateIso != blank %}<time class="card__date" datetime="{{ article.dateIso | escape }}">{{ article.dateText | escape }}</time>{% endif %}
+          <h2 class="card__title"><a href="{{ article.href | escape }}">{{ article.title | escape }}</a></h2>
+          {% if article.summary != blank %}<p class="card__summary">{{ article.summary | escape }}</p>{% endif %}
+          <a class="link-more" href="{{ article.href | escape }}">{{ t.readMore | escape }}</a>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty">{{ t.newsEmpty | escape }}</p>
+    {% endif %}
+  </div>
+</section>

@@ -1,0 +1,28 @@
+{
+  "layout": "default",
+  "wrapper": "article.article",
+  "sections": {
+    "header": {
+      "type": "article-header"
+    },
+    "cover": {
+      "type": "article-cover"
+    },
+    "body": {
+      "type": "article-body"
+    },
+    "content": {
+      "type": "content"
+    },
+    "footer": {
+      "type": "article-footer"
+    }
+  },
+  "order": [
+    "header",
+    "cover",
+    "body",
+    "content",
+    "footer"
+  ]
+}

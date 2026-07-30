@@ -1,0 +1,117 @@
+{% schema %}
+{
+  "name": "Team",
+  "settings": [
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "Theme",
+      "options": [
+        {
+          "value": "light",
+          "label": "Light"
+        },
+        {
+          "value": "cream",
+          "label": "Cream"
+        },
+        {
+          "value": "dark",
+          "label": "Dark"
+        },
+        {
+          "value": "accent",
+          "label": "Accent"
+        }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor"
+    },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "bodyHtml",
+      "label": "Body"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "member",
+      "name": "Member",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name"
+        },
+        {
+          "type": "text",
+          "id": "role",
+          "label": "Role"
+        },
+        {
+          "type": "textarea",
+          "id": "bio",
+          "label": "Bio"
+        },
+        {
+          "type": "image_picker",
+          "id": "picture",
+          "label": "Picture"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% assign members = section.settings.members | default: section.blocks %}
+
+<section class="section section--{{ section.settings.theme | escape }}"{% if section.settings.anchor != blank %} id="{{ section.settings.anchor | escape }}"{% endif %}>
+  <div class="section__inner">
+    {% render '/snippets/section-head', settings: section.settings %}
+
+    <ul class="card-grid card-grid--3">
+      {% for row in members %}
+      {% assign member = row.settings | default: row %}
+      <li class="member">
+        {% if member.picture != blank %}
+        <img class="member__photo" src="{{ member.picture | escape }}" alt="{{ member.name | escape }}" loading="lazy">
+        {% endif %}
+        <h3 class="member__name">{{ member.name | escape }}</h3>
+        {% if member.role != blank %}<p class="member__role">{{ member.role | escape }}</p>{% endif %}
+        {% if member.bio != blank %}<p class="member__bio">{{ member.bio | escape }}</p>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>

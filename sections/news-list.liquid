@@ -1,0 +1,157 @@
+{% schema %}
+{
+  "name": "Latest news",
+  "settings": [
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "Theme",
+      "options": [
+        {
+          "value": "light",
+          "label": "Light"
+        },
+        {
+          "value": "cream",
+          "label": "Cream"
+        },
+        {
+          "value": "dark",
+          "label": "Dark"
+        },
+        {
+          "value": "accent",
+          "label": "Accent"
+        }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor"
+    },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "bodyHtml",
+      "label": "Body"
+    },
+    {
+      "type": "text",
+      "id": "indexLabel",
+      "label": "All-news link label"
+    },
+    {
+      "type": "checkbox",
+      "id": "hasNews",
+      "label": "Has news",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "article",
+      "name": "Article",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "url",
+          "id": "href",
+          "label": "Link"
+        },
+        {
+          "type": "textarea",
+          "id": "summary",
+          "label": "Summary"
+        },
+        {
+          "type": "image_picker",
+          "id": "picture",
+          "label": "Picture"
+        },
+        {
+          "type": "text",
+          "id": "dateText",
+          "label": "Display date"
+        },
+        {
+          "type": "text",
+          "id": "dateIso",
+          "label": "ISO date"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{%- comment -%}
+  The CMS projection supplies `settings.news`; a static JSON section supplies
+  the same article shapes through `section.blocks`.
+{%- endcomment -%}
+{% assign news = section.settings.news | default: section.blocks %}
+<section class="section section--{{ section.settings.theme | escape }}"{% if section.settings.anchor != blank %} id="{{ section.settings.anchor | escape }}"{% endif %}>
+  <div class="section__inner">
+    {% render '/snippets/section-head', settings: section.settings %}
+
+    {% if section.settings.hasNews or section.settings.news.size > 0 %}
+    <ul class="card-grid card-grid--3">
+      {% for row in news %}
+      {% assign article = row.settings | default: row %}
+      {% if article.title != blank and article.href != blank %}
+      <li class="card">
+        {% if article.picture != blank %}
+        <a class="card__media" href="{{ article.href | escape }}">
+          <img src="{{ article.picture | escape }}" alt="{{ article.title | escape }}" loading="lazy">
+        </a>
+        {% endif %}
+        <div class="card__body">
+          {% if article.dateIso != blank %}<time class="card__date" datetime="{{ article.dateIso | escape }}">{{ article.dateText | escape }}</time>{% endif %}
+          <h3 class="card__title"><a href="{{ article.href | escape }}">{{ article.title | escape }}</a></h3>
+          {% if article.summary != blank %}<p class="card__summary">{{ article.summary | escape }}</p>{% endif %}
+        </div>
+      </li>
+      {% endif %}
+      {% endfor %}
+    </ul>
+
+    {% if section.settings.indexHref != blank %}
+    <p class="section__more">
+      <a class="link-more" href="{{ section.settings.indexHref | escape }}">{% if section.settings.indexLabel != blank %}{{ section.settings.indexLabel | escape }}{% else %}{{ t.backToNews | escape }}{% endif %}</a>
+    </p>
+    {% endif %}
+    {% else %}
+    <p class="empty">{{ t.newsEmpty | escape }}</p>
+    {% endif %}
+  </div>
+</section>

@@ -1,0 +1,83 @@
+{% schema %}
+{
+  "name": "Call to action",
+  "settings": [
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "Theme",
+      "options": [
+        {
+          "value": "light",
+          "label": "Light"
+        },
+        {
+          "value": "cream",
+          "label": "Cream"
+        },
+        {
+          "value": "dark",
+          "label": "Dark"
+        },
+        {
+          "value": "accent",
+          "label": "Accent"
+        }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "bodyHtml",
+      "label": "Body"
+    },
+    {
+      "type": "image_picker",
+      "id": "picture",
+      "label": "Picture"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button link"
+    }
+  ]
+}
+{% endschema %}
+
+{% assign button_label = section.settings.button_label | default: section.settings.button.label %}
+{% assign button_href = section.settings.button_url | default: section.settings.button.href %}
+
+<section class="section section--{{ section.settings.theme | escape }} cta"{% if section.settings.anchor != blank %} id="{{ section.settings.anchor | escape }}"{% endif %}>
+  <div class="section__inner section__inner--narrow cta__inner">
+    {% if section.settings.picture != blank %}
+    <img class="cta__picture" src="{{ section.settings.picture | escape }}" alt="" loading="lazy">
+    {% endif %}
+    {% if section.settings.eyebrow != blank %}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}
+    {% if section.settings.title != blank %}<h2 class="cta__title">{{ section.settings.title | escape }}</h2>{% endif %}
+    {% if section.settings.bodyHtml != blank %}<div class="cta__body prose">{{ section.settings.bodyHtml }}</div>{% endif %}
+    {% if button_label != blank and button_href != blank %}
+    <a class="button button--primary" href="{{ button_href | escape }}"{% if button_href contains '//' %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ button_label | escape }}</a>
+    {% endif %}
+  </div>
+</section>
