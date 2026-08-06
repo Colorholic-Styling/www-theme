@@ -13,8 +13,8 @@
   "析色生妝學院" crammed into one reads as a mistake rather than a mark.
 {%- endcomment -%}
 <header class="site-header{% if site.logo != blank %} site-header--badge{% endif %}">
-  <div class="site-header__inner">
-    <a class="brand" href="{{ site.homeHref | escape }}">
+  <div class="site-header__inner justify-end">
+    <a class="brand" class="border border-line rounded-sm" href="{{ site.homeHref | escape }}">
       {% if site.logo != blank %}
         <img class="brand__logo" src="{{ site.logo | escape }}" alt="{{ site.brand | escape }}" width="240" height="240">
       {% else %}

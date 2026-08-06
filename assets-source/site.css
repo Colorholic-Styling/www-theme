@@ -182,8 +182,6 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   width: 104px; height: 104px; padding: .9rem;
   display: grid; place-items: center;
   background: var(--white);
-  border: 1px solid var(--line); border-top: 0;
-  border-radius: 0 0 var(--radius) var(--radius);
   box-shadow: var(--shadow);
 }
 .site-header--badge .brand__logo {
