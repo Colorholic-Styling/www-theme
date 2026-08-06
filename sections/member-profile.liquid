@@ -1,0 +1,39 @@
+{% schema %}
+{
+  "name": "Team member profile",
+  "settings": []
+}
+{% endschema %}
+
+{%- comment -%}
+  Route furniture: `member` is projected by src/routes.ts from the team_member
+  page's own fields, the same way `article` is for a news post. There is nothing
+  here for a JSON template or editor to set.
+{%- endcomment -%}
+<header class="section section--cream">
+  <div class="section__inner">
+    <div class="profile__head">
+      {% if member.picture != blank %}
+      <img class="profile__photo" src="{{ member.picture | escape }}" alt="{{ member.name | escape }}">
+      {% endif %}
+      <div class="profile__intro">
+        <h1 class="profile__name">{{ member.name | escape }}</h1>
+        {% if member.role != blank %}<p class="profile__role">{{ member.role | escape }}</p>{% endif %}
+        {% if member.summary != blank %}<p class="profile__summary">{{ member.summary | escape }}</p>{% endif %}
+        {% if site.booking.has %}
+        <p class="profile__actions">
+          <a class="button" href="{{ site.booking.href | escape }}" target="_blank" rel="noopener noreferrer">{{ site.booking.label | escape }}</a>
+        </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</header>
+
+{% if member.bodyHtml != blank %}
+<div class="section section--light">
+  <div class="section__inner section__inner--narrow">
+    <div class="prose">{{ member.bodyHtml }}</div>
+  </div>
+</div>
+{% endif %}

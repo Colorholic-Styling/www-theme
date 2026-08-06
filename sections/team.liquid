@@ -87,6 +87,11 @@
           "type": "image_picker",
           "id": "picture",
           "label": "Picture"
+        },
+        {
+          "type": "url",
+          "id": "href",
+          "label": "Profile page"
         }
       ]
     }
@@ -94,12 +99,26 @@
 }
 {% endschema %}
 
-{% assign members = section.settings.members | default: section.blocks %}
+{%- comment -%}
+  Same three-source rule as sections/news-list.liquid:
+
+    section.settings.members — a CMS `team` block, projected by src/blocks.ts
+    teamMembers              — every published `team_member` page, lightest page
+                               weight first. A JSON route template reads the
+                               list from here because its section settings are
+                               strings and cannot hold one.
+    section.blocks           — members written into a JSON template by hand
+
+  `href` is set only for members that are pages of their own; a hand-written row
+  has none and simply renders without a link.
+{%- endcomment -%}
+{% assign members = section.settings.members | default: teamMembers | default: section.blocks %}
 
 <section class="section section--{{ section.settings.theme | escape }}"{% if section.settings.anchor != blank %} id="{{ section.settings.anchor | escape }}"{% endif %}>
   <div class="section__inner">
     {% render '/snippets/section-head', settings: section.settings %}
 
+    {% if members.size > 0 %}
     <ul class="card-grid card-grid--3">
       {% for row in members %}
       {% assign member = row.settings | default: row %}
@@ -109,16 +128,19 @@
           partly-photographed team still lines up as a grid instead of leaving
           one column's text riding up above the others.
         {%- endcomment -%}
+        {% if member.href != blank %}<a class="member__link" href="{{ member.href | escape }}">{% endif %}
         {% if member.picture != blank %}
         <img class="member__photo" src="{{ member.picture | escape }}" alt="{{ member.name | escape }}" loading="lazy">
         {% else %}
         <span class="member__photo member__photo--empty" aria-hidden="true"></span>
         {% endif %}
         <h3 class="member__name">{{ member.name | escape }}</h3>
+        {% if member.href != blank %}</a>{% endif %}
         {% if member.role != blank %}<p class="member__role">{{ member.role | escape }}</p>{% endif %}
         {% if member.bio != blank %}<p class="member__bio">{{ member.bio | escape }}</p>{% endif %}
       </li>
       {% endfor %}
     </ul>
+    {% endif %}
   </div>
 </section>

@@ -1,0 +1,20 @@
+{
+  "layout": "default",
+  "wrapper": "article.profile",
+  "sections": {
+    "profile": {
+      "type": "member-profile"
+    },
+    "content": {
+      "type": "content"
+    },
+    "footer": {
+      "type": "profile-footer"
+    }
+  },
+  "order": [
+    "profile",
+    "content",
+    "footer"
+  ]
+}

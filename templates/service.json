@@ -1,0 +1,20 @@
+{
+  "layout": "default",
+  "wrapper": "article.profile",
+  "sections": {
+    "detail": {
+      "type": "service-detail"
+    },
+    "content": {
+      "type": "content"
+    },
+    "footer": {
+      "type": "profile-footer"
+    }
+  },
+  "order": [
+    "detail",
+    "content",
+    "footer"
+  ]
+}

@@ -102,6 +102,11 @@
           "type": "url",
           "id": "href",
           "label": "Booking link"
+        },
+        {
+          "type": "url",
+          "id": "detailHref",
+          "label": "Detail page"
         }
       ]
     }
@@ -109,20 +114,40 @@
 }
 {% endschema %}
 
-{% assign services = section.settings.services | default: section.blocks %}
+{%- comment -%}
+  Same three-source rule as sections/news-list.liquid:
+
+    section.settings.services — a CMS `services` block, projected by src/blocks.ts
+    serviceList               — every published `service` page, lightest page
+                                weight first. A JSON route template reads the
+                                list from here because its section settings are
+                                strings and cannot hold one.
+    section.blocks            — services written into a JSON template by hand
+
+  `href` is the booking link in every source. `detailHref` is set only for
+  services that are pages of their own; a hand-written row has none and simply
+  renders without the "full detail" link.
+{%- endcomment -%}
+{% assign services = section.settings.services | default: serviceList | default: section.blocks %}
 
 <section class="section section--{{ section.settings.theme | escape }}"{% if section.settings.anchor != blank %} id="{{ section.settings.anchor | escape }}"{% endif %}>
   <div class="section__inner">
     {% render '/snippets/section-head', settings: section.settings %}
 
+    {% if services.size > 0 %}
     <ul class="price-list">
       {% for row in services %}
       {% assign service = row.settings | default: row %}
       <li class="price-list__item">
         <div class="price-list__text">
-          <h3 class="price-list__name">{{ service.name | escape }}</h3>
+          <h3 class="price-list__name">
+            {% if service.detailHref != blank %}<a href="{{ service.detailHref | escape }}">{{ service.name | escape }}</a>{% else %}{{ service.name | escape }}{% endif %}
+          </h3>
           {% if service.description != blank %}<p class="price-list__desc">{{ service.description | escape }}</p>{% endif %}
           {% if service.duration != blank %}<p class="price-list__meta">{{ service.duration | escape }}</p>{% endif %}
+          {% if service.detailHref != blank %}
+          <p class="price-list__more"><a class="link-more" href="{{ service.detailHref | escape }}">{{ t.serviceDetail | escape }}</a></p>
+          {% endif %}
         </div>
         <div class="price-list__side">
           {% if service.price != blank %}<p class="price-list__price">{{ service.price | escape }}</p>{% endif %}
@@ -133,6 +158,7 @@
       </li>
       {% endfor %}
     </ul>
+    {% endif %}
 
     {% if section.settings.note != blank %}<p class="section__note">{{ section.settings.note | escape }}</p>{% endif %}
   </div>

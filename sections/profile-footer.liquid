@@ -1,0 +1,16 @@
+{% schema %}
+{
+  "name": "Profile footer",
+  "settings": []
+}
+{% endschema %}
+
+{%- comment -%}
+  Team members and services are reached from the homepage rather than from an
+  index of their own, so the way back is the homepage.
+{%- endcomment -%}
+<div class="section section--light profile__footer">
+  <div class="section__inner section__inner--narrow">
+    <a class="link-more" href="{{ site.homeHref | escape }}">← {{ t.backHome | escape }}</a>
+  </div>
+</div>

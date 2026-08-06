@@ -63,15 +63,14 @@
       "label": "Body"
     },
     {
+      "type": "url",
+      "id": "indexHref",
+      "label": "All-news link"
+    },
+    {
       "type": "text",
       "id": "indexLabel",
       "label": "All-news link label"
-    },
-    {
-      "type": "checkbox",
-      "id": "hasNews",
-      "label": "Has news",
-      "default": false
     }
   ],
   "blocks": [
@@ -116,15 +115,24 @@
 {% endschema %}
 
 {%- comment -%}
-  The CMS projection supplies `settings.news`; a static JSON section supplies
-  the same article shapes through `section.blocks`.
+  Three sources for the same article shape, first non-empty wins:
+
+    section.settings.news — a CMS `news-list` block, projected by src/blocks.ts
+    latestNews            — the route's latest articles, newest publish date
+                            first. This is what a JSON route template uses: its
+                            section settings are strings, so it can hand this
+                            section a title but never a list.
+    section.blocks        — articles written into a JSON template by hand
+
+  `default` treats an empty array as absent, so an unpublished news archive
+  falls through to the next source rather than rendering an empty grid.
 {%- endcomment -%}
-{% assign news = section.settings.news | default: section.blocks %}
+{% assign news = section.settings.news | default: latestNews | default: section.blocks %}
 <section class="section section--{{ section.settings.theme | escape }}"{% if section.settings.anchor != blank %} id="{{ section.settings.anchor | escape }}"{% endif %}>
   <div class="section__inner">
     {% render '/snippets/section-head', settings: section.settings %}
 
-    {% if section.settings.hasNews or section.settings.news.size > 0 %}
+    {% if news.size > 0 %}
     <ul class="card-grid card-grid--3">
       {% for row in news %}
       {% assign article = row.settings | default: row %}

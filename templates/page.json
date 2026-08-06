@@ -71,47 +71,7 @@
         "title": "{{ page.blocks[2].title }}",
         "bodyHtml": "{{ page.blocks[2].bodyHtml }}",
         "note": "{{ page.blocks[2].note }}"
-      },
-      "blocks": {
-        "service-1": {
-          "type": "service",
-          "settings": {
-            "name": "{{ page.blocks[2].services[0].name }}",
-            "description": "{{ page.blocks[2].services[0].description }}",
-            "duration": "{{ page.blocks[2].services[0].duration }}",
-            "price": "{{ page.blocks[2].services[0].price }}",
-            "label": "{{ page.blocks[2].services[0].label }}",
-            "href": "{{ page.blocks[2].services[0].href }}"
-          }
-        },
-        "service-2": {
-          "type": "service",
-          "settings": {
-            "name": "{{ page.blocks[2].services[1].name }}",
-            "description": "{{ page.blocks[2].services[1].description }}",
-            "duration": "{{ page.blocks[2].services[1].duration }}",
-            "price": "{{ page.blocks[2].services[1].price }}",
-            "label": "{{ page.blocks[2].services[1].label }}",
-            "href": "{{ page.blocks[2].services[1].href }}"
-          }
-        },
-        "service-3": {
-          "type": "service",
-          "settings": {
-            "name": "{{ page.blocks[2].services[2].name }}",
-            "description": "{{ page.blocks[2].services[2].description }}",
-            "duration": "{{ page.blocks[2].services[2].duration }}",
-            "price": "{{ page.blocks[2].services[2].price }}",
-            "label": "{{ page.blocks[2].services[2].label }}",
-            "href": "{{ page.blocks[2].services[2].href }}"
-          }
-        }
-      },
-      "block_order": [
-        "service-1",
-        "service-2",
-        "service-3"
-      ]
+      }
     },
     "steps": {
       "type": "steps",
@@ -233,41 +193,7 @@
         "eyebrow": "{{ page.blocks[5].eyebrow }}",
         "title": "{{ page.blocks[5].title }}",
         "bodyHtml": "{{ page.blocks[5].bodyHtml }}"
-      },
-      "blocks": {
-        "member-1": {
-          "type": "member",
-          "settings": {
-            "name": "{{ page.blocks[5].members[0].name }}",
-            "role": "{{ page.blocks[5].members[0].role }}",
-            "bio": "{{ page.blocks[5].members[0].bio }}",
-            "picture": "{{ page.blocks[5].members[0].picture }}"
-          }
-        },
-        "member-2": {
-          "type": "member",
-          "settings": {
-            "name": "{{ page.blocks[5].members[1].name }}",
-            "role": "{{ page.blocks[5].members[1].role }}",
-            "bio": "{{ page.blocks[5].members[1].bio }}",
-            "picture": "{{ page.blocks[5].members[1].picture }}"
-          }
-        },
-        "member-3": {
-          "type": "member",
-          "settings": {
-            "name": "{{ page.blocks[5].members[2].name }}",
-            "role": "{{ page.blocks[5].members[2].role }}",
-            "bio": "{{ page.blocks[5].members[2].bio }}",
-            "picture": "{{ page.blocks[5].members[2].picture }}"
-          }
-        }
-      },
-      "block_order": [
-        "member-1",
-        "member-2",
-        "member-3"
-      ]
+      }
     },
     "faq": {
       "type": "faq",
@@ -317,50 +243,9 @@
         "eyebrow": "{{ page.blocks[7].eyebrow }}",
         "title": "{{ page.blocks[7].title }}",
         "bodyHtml": "{{ page.blocks[7].bodyHtml }}",
-        "hasNews": "{% if page.blocks[7].hasNews %}yes{% endif %}",
         "indexHref": "{{ page.blocks[7].indexHref }}",
         "indexLabel": "{{ page.blocks[7].indexLabel }}"
-      },
-      "blocks": {
-        "article-1": {
-          "type": "article",
-          "settings": {
-            "title": "{{ page.blocks[7].news[0].title }}",
-            "href": "{{ page.blocks[7].news[0].href }}",
-            "summary": "{{ page.blocks[7].news[0].summary }}",
-            "picture": "{{ page.blocks[7].news[0].picture }}",
-            "dateText": "{{ page.blocks[7].news[0].dateText }}",
-            "dateIso": "{{ page.blocks[7].news[0].dateIso }}"
-          }
-        },
-        "article-2": {
-          "type": "article",
-          "settings": {
-            "title": "{{ page.blocks[7].news[1].title }}",
-            "href": "{{ page.blocks[7].news[1].href }}",
-            "summary": "{{ page.blocks[7].news[1].summary }}",
-            "picture": "{{ page.blocks[7].news[1].picture }}",
-            "dateText": "{{ page.blocks[7].news[1].dateText }}",
-            "dateIso": "{{ page.blocks[7].news[1].dateIso }}"
-          }
-        },
-        "article-3": {
-          "type": "article",
-          "settings": {
-            "title": "{{ page.blocks[7].news[2].title }}",
-            "href": "{{ page.blocks[7].news[2].href }}",
-            "summary": "{{ page.blocks[7].news[2].summary }}",
-            "picture": "{{ page.blocks[7].news[2].picture }}",
-            "dateText": "{{ page.blocks[7].news[2].dateText }}",
-            "dateIso": "{{ page.blocks[7].news[2].dateIso }}"
-          }
-        }
-      },
-      "block_order": [
-        "article-1",
-        "article-2",
-        "article-3"
-      ]
+      }
     },
     "contact": {
       "type": "contact",

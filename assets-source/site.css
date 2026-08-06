@@ -182,7 +182,6 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   width: 104px; height: 104px; padding: .9rem;
   display: grid; place-items: center;
   background: var(--white);
-  box-shadow: var(--shadow);
 }
 .site-header--badge .brand__logo {
   width: 100%; height: 100%; object-fit: contain; background: none;
@@ -322,6 +321,26 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 .article__cover img { width: 100%; max-height: 60vh; object-fit: cover; }
 .article__footer { padding-top: 0; }
 
+/* ── Profile pages (a team member, a service) ─────────────────
+   One layout for both: a portrait or service photo beside the name, the facts
+   and the booking button, with the long copy running full width underneath. */
+
+.profile__head { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 3rem); align-items: start; }
+.profile__head:only-child { align-items: center; }
+.profile__photo { width: 100%; border-radius: var(--radius); aspect-ratio: 4 / 5; object-fit: cover; }
+.profile__name { margin: .3rem 0 0; font-size: clamp(1.8rem, 4.4vw, 2.7rem); }
+.profile__role { margin: .6rem 0 0; color: var(--accent); font-size: .95rem; letter-spacing: .06em; }
+.profile__summary { margin: 1.1rem 0 0; color: var(--ink-soft); font-size: 1.05rem; max-width: var(--measure); }
+.profile__facts { display: flex; flex-wrap: wrap; gap: 2.2rem; margin: 1.6rem 0 0; }
+.profile__fact dt { margin: 0 0 .25rem; font-size: .78rem; text-transform: uppercase; letter-spacing: .14em; color: var(--ink-muted); }
+.profile__fact dd { margin: 0; font-size: 1.05rem; }
+.profile__price { font-family: var(--font-display); font-size: 1.35rem; }
+.profile__actions { margin: 1.8rem 0 0; }
+.profile__footer { padding-top: 0; }
+
+/* A profile page with no photo would otherwise leave a 300px hole. */
+.profile__head:not(:has(.profile__photo)) { grid-template-columns: minmax(0, 1fr); }
+
 /* ── Cards / grids ────────────────────────────────────────── */
 
 .card-grid { display: grid; gap: 1.75rem; list-style: none; margin: 0; padding: 0; }
@@ -357,8 +376,11 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   padding: 1.6rem 0; border-bottom: 1px solid var(--line);
 }
 .price-list__name { margin: 0 0 .35rem; font-size: 1.15rem; }
+.price-list__name a { color: inherit; text-decoration: none; }
+.price-list__name a:hover { color: var(--accent); }
 .price-list__desc { margin: 0 0 .35rem; color: var(--ink-soft); font-size: .96rem; max-width: 52ch; }
 .price-list__meta { margin: 0; color: var(--ink-muted); font-size: .86rem; }
+.price-list__more { margin: .6rem 0 0; font-size: .88rem; }
 .price-list__side { display: flex; flex-direction: column; align-items: flex-end; gap: .6rem; flex-shrink: 0; }
 .price-list__price { margin: 0; font-family: var(--font-display); font-size: 1.2rem; white-space: nowrap; }
 
@@ -402,6 +424,10 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 /* ── Team ─────────────────────────────────────────────────── */
 
 .member { list-style: none; }
+/* Members that are pages of their own wrap portrait + name in one link, so the
+   whole tile head is the target rather than the name alone. */
+.member__link { display: block; color: inherit; text-decoration: none; }
+.member__link:hover .member__name { color: var(--accent); }
 .member__photo { display: block; border-radius: var(--radius); aspect-ratio: 4 / 5; object-fit: cover; width: 100%; margin-bottom: 1rem; }
 .member__photo--empty { background: var(--rose-tint); }
 .member__name { margin: 0 0 .2rem; font-size: 1.12rem; }
@@ -506,6 +532,8 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   .lang-switch { justify-content: flex-start; }
 
   .card-grid--2, .card-grid--3, .card-grid--4, .split, .contact { grid-template-columns: 1fr; }
+  .profile__head { grid-template-columns: 1fr; }
+  .profile__photo { max-width: 260px; }
   .price-list__item { flex-direction: column; gap: .9rem; }
   .price-list__side { align-items: flex-start; flex-direction: row; align-items: center; gap: 1rem; }
   .site-footer__inner { grid-template-columns: 1fr; }

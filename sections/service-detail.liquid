@@ -1,0 +1,58 @@
+{% schema %}
+{
+  "name": "Service detail",
+  "settings": []
+}
+{% endschema %}
+
+{%- comment -%}
+  Route furniture: `service` is projected by src/routes.ts from the service
+  page's own fields. `service.booking.href` already falls back to the site-wide
+  BOOKING_URL when the page leaves its own link empty, so the button is only
+  absent when neither is configured.
+{%- endcomment -%}
+<header class="section section--cream">
+  <div class="section__inner">
+    <div class="profile__head">
+      {% if service.picture != blank %}
+      <img class="profile__photo" src="{{ service.picture | escape }}" alt="{{ service.name | escape }}">
+      {% endif %}
+      <div class="profile__intro">
+        {% if service.category != blank %}<p class="eyebrow">{{ service.category | escape }}</p>{% endif %}
+        <h1 class="profile__name">{{ service.name | escape }}</h1>
+        {% if service.summary != blank %}<p class="profile__summary">{{ service.summary | escape }}</p>{% endif %}
+
+        {% if service.duration != blank or service.price != blank %}
+        <dl class="profile__facts">
+          {% if service.duration != blank %}
+          <div class="profile__fact">
+            <dt>{{ t.duration | escape }}</dt>
+            <dd>{{ service.duration | escape }}</dd>
+          </div>
+          {% endif %}
+          {% if service.price != blank %}
+          <div class="profile__fact">
+            <dt>{{ t.price | escape }}</dt>
+            <dd class="profile__price">{{ service.price | escape }}</dd>
+          </div>
+          {% endif %}
+        </dl>
+        {% endif %}
+
+        {% if service.booking.has %}
+        <p class="profile__actions">
+          <a class="button" href="{{ service.booking.href | escape }}" target="_blank" rel="noopener noreferrer">{% if service.booking.label != blank %}{{ service.booking.label | escape }}{% else %}{{ t.book | escape }}{% endif %}</a>
+        </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</header>
+
+{% if service.bodyHtml != blank %}
+<div class="section section--light">
+  <div class="section__inner section__inner--narrow">
+    <div class="prose">{{ service.bodyHtml }}</div>
+  </div>
+</div>
+{% endif %}
