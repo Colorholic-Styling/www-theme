@@ -7,18 +7,26 @@
    ============================================================ */
 
 :root {
-  --ink: #1f1b22;
-  --ink-soft: #4b4450;
-  --ink-muted: #7b7280;
-  --cream: #faf5f0;
-  --cream-deep: #f2e9e1;
-  --line: #e6dcd3;
+  /* Neutrals carry a trace of the logo's hue (~351°) so the greys, the cream
+     and the near-black read as one family with the mark rather than as a warm
+     beige palette that happens to sit next to a pink logo. */
+  --ink: #221c1e;
+  --ink-soft: #52474b;
+  --ink-muted: #7b6d71;
+  --cream: #faf4f5;
+  --cream-deep: #f4e6e8;
+  --line: #eadcde;
   --white: #ffffff;
 
-  /* Brand accent — a muted rose that reads warm against the cream base. */
-  --accent: #b4485f;
-  --accent-deep: #8f3549;
-  --accent-soft: #f6e6ea;
+  /* Brand rose, taken from the logo mark (#d98a96). At 2.6:1 on white it can
+     never carry text, so it stays decorative — rules, tints, dark-section
+     accents — and --accent/--accent-deep are the same hue pushed dark enough
+     to pass AA for body copy and for white text on a filled button. */
+  --rose: #d98a96;
+  --rose-tint: #efcdd2;
+  --accent: #b94c60;
+  --accent-deep: #8e3644;
+  --accent-soft: #f9ebed;
 
   /* The four seasonal families behind the 16-colour system. */
   --season-spring: #f0a860;
@@ -28,7 +36,7 @@
 
   --radius: 14px;
   --radius-lg: 24px;
-  --shadow: 0 1px 2px rgba(31, 27, 34, .06), 0 12px 32px -12px rgba(31, 27, 34, .18);
+  --shadow: 0 1px 2px rgba(34, 28, 30, .06), 0 12px 32px -12px rgba(34, 28, 30, .18);
   --measure: 68ch;
   --shell: 1160px;
   --shell-narrow: 780px;
@@ -84,6 +92,26 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 .brand { display: inline-flex; align-items: center; text-decoration: none; color: var(--ink); }
 .brand__name { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; letter-spacing: .04em; }
 .brand__logo { height: 36px; width: auto; }
+
+/* Floating logo badge (--badge, set only when a logo is uploaded).
+   The tile is taller than the header row and hangs past the bottom rule onto
+   the section below, so it needs to sit above the header's own stacking
+   context but under .skip-link (z-index 100). The row reserves its width with
+   padding rather than keeping the anchor in flow — an absolutely positioned
+   flex child would otherwise let the nav slide underneath it. */
+.site-header--badge .site-header__inner { padding-left: calc(104px + 2.5rem); }
+.site-header--badge .brand {
+  position: absolute; left: 1.25rem; top: 0; z-index: 45;
+  width: 104px; height: 104px; padding: .9rem;
+  display: grid; place-items: center;
+  background: var(--white);
+  border: 1px solid var(--line); border-top: 0;
+  border-radius: 0 0 var(--radius) var(--radius);
+  box-shadow: var(--shadow);
+}
+.site-header--badge .brand__logo {
+  width: 100%; height: 100%; object-fit: contain; background: none;
+}
 
 /* Menu toggle: a real checkbox (keyboard operable) plus its label as the
    hamburger. Both are hidden above the mobile breakpoint, where the nav is
@@ -152,7 +180,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 
 .section--dark h1, .section--dark h2, .section--dark h3 { color: var(--white); }
 .section--dark a { color: var(--cream); }
-.section--dark .eyebrow { color: var(--season-spring); }
+.section--dark .eyebrow { color: var(--rose); }
 .section--dark .button--ghost { color: var(--cream); }
 .section--dark .button--ghost:hover { background: var(--cream); color: var(--ink); }
 
@@ -174,7 +202,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 .prose h3 { font-size: 1.2rem; margin: 1.6rem 0 .6rem; }
 .prose blockquote {
   margin: 1.5rem 0; padding: .4rem 0 .4rem 1.25rem;
-  border-left: 3px solid var(--accent); color: var(--ink-soft); font-style: italic;
+  border-left: 3px solid var(--rose); color: var(--ink-soft); font-style: italic;
 }
 .prose img { border-radius: var(--radius); margin: 1.5rem 0; }
 .prose table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: .95rem; }
@@ -200,7 +228,9 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 .hero__body { color: var(--ink-soft); font-size: 1.05rem; }
 .hero--dark .hero__body { color: var(--cream-deep); }
 .hero__actions { display: flex; flex-wrap: wrap; gap: .85rem; margin: 2rem 0 0; }
-.hero__media img { border-radius: var(--radius-lg); box-shadow: var(--shadow); object-fit: cover; width: 100%; }
+/* Pinning the aspect keeps the hero column stable whatever an editor uploads —
+   the width/height attributes on the <img> only describe the file, not the box. */
+.hero__media img { border-radius: var(--radius-lg); box-shadow: var(--shadow); object-fit: cover; width: 100%; aspect-ratio: 3 / 2; }
 
 /* ── Page head / article ──────────────────────────────────── */
 
@@ -223,6 +253,13 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 .card-grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .card-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .card-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+/* Photos arrive over the network and their boxes are already sized, so an
+   untinted box flashes white against the cream sections. The rose tint holds
+   the slot in the brand colour until the image paints. */
+.card__media, .gallery img, .hero__media img, .split__media img, .member__photo, .article__cover img {
+  background: var(--rose-tint);
+}
 
 .card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; }
 .card__media { display: block; aspect-ratio: 3 / 2; overflow: hidden; }
@@ -299,14 +336,15 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.5rem; list-style: none; margin: 0; padding: 0; text-align: center; }
 .stats__value { margin: 0; font-family: var(--font-display); font-size: clamp(2rem, 4vw, 2.8rem); color: var(--accent); }
-.section--dark .stats__value { color: var(--season-spring); }
+.section--dark .stats__value { color: var(--rose); }
 .stats__label { margin: .3rem 0 0; color: var(--ink-muted); font-size: .9rem; }
 .section--dark .stats__label { color: var(--cream-deep); }
 
 /* ── Team ─────────────────────────────────────────────────── */
 
 .member { list-style: none; }
-.member__photo { border-radius: var(--radius); aspect-ratio: 4 / 5; object-fit: cover; width: 100%; margin-bottom: 1rem; }
+.member__photo { display: block; border-radius: var(--radius); aspect-ratio: 4 / 5; object-fit: cover; width: 100%; margin-bottom: 1rem; }
+.member__photo--empty { background: var(--rose-tint); }
 .member__name { margin: 0 0 .2rem; font-size: 1.12rem; }
 .member__role { margin: 0 0 .6rem; color: var(--accent); font-size: .88rem; letter-spacing: .06em; }
 .member__bio { margin: 0; color: var(--ink-soft); font-size: .95rem; }
@@ -383,6 +421,12 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 
 @media (max-width: 720px) {
   body { font-size: 16px; }
+
+  /* The badge shrinks so it clears the hamburger, and stops overhanging as far
+     — on a phone the tile would otherwise eat the top of the hero. */
+  .site-header--badge .site-header__inner { padding-left: calc(68px + 1.6rem); }
+  .site-header--badge .brand { width: 68px; height: 68px; padding: .5rem; }
+
   .nav-toggle { display: flex; }
   .nav-checkbox {
     display: block; position: absolute; width: 1px; height: 1px;

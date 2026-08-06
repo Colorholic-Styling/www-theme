@@ -4,11 +4,19 @@
   element cannot serve here — it hides every non-<summary> child when closed,
   so the nav would vanish on desktop too.
 {%- endcomment -%}
-<header class="site-header">
+{%- comment -%}
+  With a logo uploaded the brand becomes a floating tile pinned to the top-left
+  that overhangs the header rule (the cowise.com.hk treatment). The header is
+  already position:sticky, so the tile rides down the page with it.
+
+  Without a logo it stays the inline wordmark: the tile is a square, and
+  "析色生妝學院" crammed into one reads as a mistake rather than a mark.
+{%- endcomment -%}
+<header class="site-header{% if site.logo != blank %} site-header--badge{% endif %}">
   <div class="site-header__inner">
     <a class="brand" href="{{ site.homeHref | escape }}">
       {% if site.logo != blank %}
-        <img class="brand__logo" src="{{ site.logo | escape }}" alt="{{ site.brand | escape }}" width="160" height="40">
+        <img class="brand__logo" src="{{ site.logo | escape }}" alt="{{ site.brand | escape }}" width="240" height="240">
       {% else %}
         <span class="brand__name">{{ site.brand | escape }}</span>
       {% endif %}
