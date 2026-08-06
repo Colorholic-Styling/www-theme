@@ -106,17 +106,34 @@
 
 {% assign pictures = section.settings.pictures | default: section.blocks %}
 
+{%- comment -%}
+  Tailwind finds classes by scanning this file for literal strings, so the
+  column count has to be mapped to whole utility names. Interpolating it —
+  `grid-cols-{{ columns }}` — compiles to no CSS at all and fails silently:
+  the markup looks right and the grid renders as a single column.
+
+  `nav:` is this theme's 721px breakpoint (see assets-source/site.css), which
+  is where 3- and 4-column galleries used to collapse to 2.
+{%- endcomment -%}
+{% assign columns = section.settings.columns | default: 3 %}
+{% case columns %}
+  {% when 2, '2' %}{% assign column_classes = 'grid-cols-2' %}
+  {% when 4, '4' %}{% assign column_classes = 'grid-cols-2 nav:grid-cols-4' %}
+  {% else %}{% assign column_classes = 'grid-cols-2 nav:grid-cols-3' %}
+{% endcase %}
+
 <section class="section section--{{ section.settings.theme | escape }}"{% if section.settings.anchor != blank %} id="{{ section.settings.anchor | escape }}"{% endif %}>
   <div class="section__inner">
     {% render '/snippets/section-head', settings: section.settings %}
 
-    <ul class="gallery gallery--{{ section.settings.columns | default: 3 }}">
+    <ul class="grid gap-4 m-0 p-0 list-none {{ column_classes }}">
       {% for row in pictures %}
       {% assign picture = row.settings | default: row %}
-      <li class="gallery__item">
-        <figure>
-          <img src="{{ picture.src | escape }}" alt="{{ picture.caption | escape }}" loading="lazy">
-          {% if picture.caption != blank %}<figcaption>{{ picture.caption | escape }}</figcaption>{% endif %}
+      <li>
+        <figure class="m-0">
+          <img class="w-full aspect-square object-cover rounded-card bg-rose-tint"
+               src="{{ picture.src | escape }}" alt="{{ picture.caption | escape }}" loading="lazy">
+          {% if picture.caption != blank %}<figcaption class="mt-2 text-meta text-ink-muted">{{ picture.caption | escape }}</figcaption>{% endif %}
         </figure>
       </li>
       {% endfor %}

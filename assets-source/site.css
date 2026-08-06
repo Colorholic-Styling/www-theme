@@ -20,11 +20,16 @@
 
 /* Class detection is explicit: the theme's markup is Liquid, and the default
    scanner would also walk assets/ and pick class names out of the compiled
-   output — feeding the build its own result. */
-@source "./layout";
-@source "./sections";
-@source "./snippets";
-@source "./templates";
+   output — feeding the build its own result, so a utility could never be
+   dropped once emitted.
+
+   Paths are relative to THIS file, which sits in assets-source/ — hence the
+   `../`. Pointing them at ./sections costs no error and no warning; the build
+   succeeds and emits zero utilities. */
+@source "../layout";
+@source "../sections";
+@source "../snippets";
+@source "../templates";
 
 /* ---- Brand tokens ------------------------------------------------------
    Declared in @theme so Tailwind generates matching utilities (bg-cream,
@@ -67,8 +72,21 @@
      the theme's 24px winning only by the unlayered-beats-layered rule, which
      silently inverts the day someone wraps :root in a layer. One definition,
      in the layer that owns the name. `rounded-lg` now means the theme's 24px. */
-  --radius: 14px;
+  --radius-card: 14px;
   --radius-lg: 24px;
+
+  /* Small type used by captions, meta lines and dates — off Tailwind's scale,
+     so it needs a token to be reachable as `text-meta`. */
+  --text-meta: .85rem;
+
+  /* This theme's stylesheet is desktop-first (max-width: 720px / 900px) while
+     Tailwind is mobile-first. These are the min-width complements, one pixel
+     up, so `nav:` and `wide:` switch on exactly the viewport the old media
+     queries did — using Tailwind's own `sm`/`md` (640/768px) instead would
+     move every responsive boundary without anything looking obviously broken.
+     Read `nav:` as "wider than the mobile nav breakpoint". */
+  --breakpoint-nav: 721px;
+  --breakpoint-wide: 901px;
 }
 
 :root {
@@ -90,6 +108,10 @@
   --season-summer: var(--color-season-summer);
   --season-autumn: var(--color-season-autumn);
   --season-winter: var(--color-season-winter);
+
+  /* --radius aliases the @theme token so `rounded-card` and var(--radius) can
+     never drift apart; --radius-lg needs no alias, the name is already shared. */
+  --radius: var(--radius-card);
 
   --shadow: 0 1px 2px rgba(34, 28, 28, .06), 0 12px 32px -12px rgba(34, 28, 28, .18);
   --measure: 68ch;
@@ -312,7 +334,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 /* Photos arrive over the network and their boxes are already sized, so an
    untinted box flashes white against the cream sections. The rose tint holds
    the slot in the brand colour until the image paints. */
-.card__media, .gallery img, .hero__media img, .split__media img, .member__photo, .article__cover img {
+.card__media, .hero__media img, .split__media img, .member__photo, .article__cover img {
   background: var(--rose-tint);
 }
 
@@ -367,15 +389,10 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 .split__media img { border-radius: var(--radius-lg); width: 100%; object-fit: cover; }
 .split__media figcaption { margin-top: .7rem; color: var(--ink-muted); font-size: .85rem; }
 
-/* ── Gallery ──────────────────────────────────────────────── */
-
-.gallery { display: grid; gap: 1rem; list-style: none; margin: 0; padding: 0; }
-.gallery--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.gallery--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.gallery--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.gallery figure { margin: 0; }
-.gallery img { border-radius: var(--radius); aspect-ratio: 1 / 1; object-fit: cover; width: 100%; }
-.gallery figcaption { margin-top: .5rem; font-size: .85rem; color: var(--ink-muted); }
+/* ── Gallery ──────────────────────────────────────────────────
+   Nothing here: sections/gallery.liquid carries its own utilities. Kept as a
+   marker so the next person looks in the section rather than assuming the
+   styles went missing. */
 
 /* ── Testimonials ─────────────────────────────────────────── */
 
@@ -503,7 +520,6 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   .lang-switch { justify-content: flex-start; }
 
   .card-grid--2, .card-grid--3, .card-grid--4, .split, .contact { grid-template-columns: 1fr; }
-  .gallery--3, .gallery--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .price-list__item { flex-direction: column; gap: .9rem; }
   .price-list__side { align-items: flex-start; flex-direction: row; align-items: center; gap: 1rem; }
   .site-footer__inner { grid-template-columns: 1fr; }
