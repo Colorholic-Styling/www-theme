@@ -11,7 +11,7 @@
 {% if meta.image != blank %}<meta property="og:image" content="{{ meta.image | escape }}">{% endif %}
 <meta name="twitter:card" content="{% if meta.image != blank %}summary_large_image{% else %}summary{% endif %}">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta name="theme-color" content="#221c1e">
+<meta name="theme-color" content="#221c1c">
 {% for language in languages %}<link rel="alternate" hreflang="{{ language.code | escape }}" href="{{ canonicalOrigin | escape }}{{ language.href | escape }}">
 {% endfor %}{%- comment -%}
   `assetVersion` is the Worker's deploy id, so it only moves on a redeploy —
@@ -20,4 +20,4 @@
   HTML is edge-cached (CACHE_MAX_AGE), so in practice this turns over about
   once a minute rather than on literally every request.
 {%- endcomment -%}
-<link rel="stylesheet" href="/assets/site.css?v={{ assetVersion | escape }}&amp;r={{ 'now' | date: '%s' }}">
+<link rel="stylesheet" href="/assets/site.css?v={{ assetVersion | escape }}&r={{ 'now' | date: '%s' }}">

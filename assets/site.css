@@ -7,26 +7,27 @@
    ============================================================ */
 
 :root {
-  /* Neutrals carry a trace of the logo's hue (~351°) so the greys, the cream
+  /* Neutrals carry a trace of the logo's hue (~355°) so the greys, the cream
      and the near-black read as one family with the mark rather than as a warm
      beige palette that happens to sit next to a pink logo. */
-  --ink: #221c1e;
-  --ink-soft: #52474b;
-  --ink-muted: #7b6d71;
-  --cream: #faf4f5;
-  --cream-deep: #f4e6e8;
-  --line: #eadcde;
+  --ink: #221c1c;
+  --ink-soft: #524748;
+  --ink-muted: #77696b;
+  --cream: #fbf4f4;
+  --cream-deep: #f5e6e7;
+  --line: #ebdbdc;
   --white: #ffffff;
 
-  /* Brand rose, taken from the logo mark (#d98a96). At 2.6:1 on white it can
-     never carry text, so it stays decorative — rules, tints, dark-section
-     accents — and --accent/--accent-deep are the same hue pushed dark enough
-     to pass AA for body copy and for white text on a filled button. */
-  --rose: #d98a96;
-  --rose-tint: #efcdd2;
-  --accent: #b94c60;
-  --accent-deep: #8e3644;
-  --accent-soft: #f9ebed;
+  /* Brand rose, sampled off assets/logo.jpeg — #e08890 is the modal colour of
+     the mark's strokes, hsl(355 61% 69%). At 2.6:1 on white it can never carry
+     text, so it stays decorative — rules, tints, dark-section accents — and
+     --accent/--accent-deep are the same hue pushed dark enough to pass AA for
+     body copy and for white text on a filled button. */
+  --rose: #e08890;
+  --rose-tint: #f3ced1;
+  --accent: #bb3e49;
+  --accent-deep: #8f2d35;
+  --accent-soft: #fbeff0;
 
   /* The four seasonal families behind the 16-colour system. */
   --season-spring: #f0a860;
@@ -36,7 +37,7 @@
 
   --radius: 14px;
   --radius-lg: 24px;
-  --shadow: 0 1px 2px rgba(34, 28, 30, .06), 0 12px 32px -12px rgba(34, 28, 30, .18);
+  --shadow: 0 1px 2px rgba(34, 28, 28, .06), 0 12px 32px -12px rgba(34, 28, 28, .18);
   --measure: 68ch;
   --shell: 1160px;
   --shell-narrow: 780px;
