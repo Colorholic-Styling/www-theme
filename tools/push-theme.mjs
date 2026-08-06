@@ -12,7 +12,9 @@
 // theme that silently skips a file is worse than one that takes 15 seconds.
 
 import { execFile } from 'node:child_process';
-import { readdir, stat } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { readdir, readFile, writeFile, unlink } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import { join, relative, resolve, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
@@ -26,6 +28,12 @@ const PREFIX = (process.env.THEME_PREFIX ?? 't/85b4297c328c3117/www-theme').repl
 // The directories the Worker reads. assets-source/, tools/ and the npm files
 // are build inputs and must not reach the bucket.
 const TREES = ['assets', 'layout', 'sections', 'snippets', 'templates'];
+
+// Hash of everything above, written after a successful full push. colorholic-www
+// reads it into its page cache key, so a theme push invalidates rendered HTML —
+// without it the key only moves when the Worker redeploys or a page is
+// republished, and edits sit behind the CDN for up to ~11 minutes.
+const VERSION_OBJECT = 'theme-version';
 
 const CONTENT_TYPES = {
   '.css': 'text/css',
@@ -127,6 +135,36 @@ if (!noBuild) {
 }
 
 const failures = await pool(files, upload);
+
+// The version marker goes last, and only if every file landed. The Worker
+// folds it into its page cache key, so publishing a new version while some
+// file failed to upload would advertise a theme state that is not in the
+// bucket — and cache the half-pushed render under it.
+if (failures.length === 0 && !only) {
+  const digest = createHash('sha256');
+  for (const path of files) {
+    digest.update(path);
+    digest.update('\0');
+    digest.update(await readFile(join(root, path)));
+    digest.update('\n');
+  }
+  const version = digest.digest('hex').slice(0, 16);
+  const scratch = join(tmpdir(), `theme-version-${process.pid}`);
+  await writeFile(scratch, version);
+  try {
+    await run('npx', [
+      'wrangler', 'r2', 'object', 'put', `${BUCKET}/${PREFIX}/${VERSION_OBJECT}`,
+      '--file', scratch, '--content-type', 'text/plain', '--remote',
+    ], { cwd: root });
+    console.log(`  ✓ ${VERSION_OBJECT} (${version})`);
+  } finally {
+    await unlink(scratch).catch(() => {});
+  }
+} else if (only && failures.length === 0) {
+  console.log(`\n  ! ${VERSION_OBJECT} not updated: --only pushes a subset, so the`);
+  console.log('    hash would not describe the bucket. Run a full push to bump it,');
+  console.log('    or expect the page cache to keep serving the previous render.');
+}
 
 if (failures.length > 0) {
   console.error(`\n${failures.length} file(s) failed:`);

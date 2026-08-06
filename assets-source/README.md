@@ -79,3 +79,13 @@ Two things that will mislead you when checking a push landed:
   (`curl -s <site>/assets/site.css | md5`), not against wrangler.
 - Warm Worker isolates cache theme files for their lifetime, so a push reaches
   requests gradually rather than all at once.
+
+### Cache invalidation
+
+A full push also writes a `theme-version` object holding a hash of every file
+uploaded. colorholic-www folds that into its rendered-page cache key, so a
+theme push selects a new cache entry instead of waiting out the CDN.
+
+`--only` deliberately does **not** update it: a partial push would advertise a
+hash that does not describe the bucket. The script warns when it skips the
+bump — run a full push to make the change take effect.
