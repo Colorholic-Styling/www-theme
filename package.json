@@ -1,0 +1,17 @@
+{
+  "name": "colorholic-www-theme",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "0xCMS theme for Colorholic Styling 析色生妝學院 — Liquid views plus the Tailwind-built stylesheet.",
+  "scripts": {
+    "build": "npm run build:css",
+    "build:css": "tailwindcss -i assets-source/site.css -o assets/site.css --minify",
+    "build:css:debug": "tailwindcss -i assets-source/site.css -o assets/site.css",
+    "watch:css": "tailwindcss -i assets-source/site.css -o assets/site.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}
