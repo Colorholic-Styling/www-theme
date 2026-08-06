@@ -90,12 +90,16 @@
   <div class="section__inner">
     {% render '/snippets/section-head', settings: section.settings %}
 
-    <ul class="stats">
+    {%- comment -%}
+      stats__value and stats__label stay as hooks for the dark theme's repaint
+      (.section--dark .stats__value); their base styles are utilities.
+    {%- endcomment -%}
+    <ul class="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-6 m-0 p-0 list-none text-center">
       {% for row in stats %}
       {% assign stat = row.settings | default: row %}
-      <li class="stats__item">
-        <p class="stats__value">{{ stat.value | escape }}</p>
-        {% if stat.label != blank %}<p class="stats__label">{{ stat.label | escape }}</p>{% endif %}
+      <li>
+        <p class="stats__value m-0 font-display text-[clamp(2rem,4vw,2.8rem)] text-accent">{{ stat.value | escape }}</p>
+        {% if stat.label != blank %}<p class="stats__label mt-[.3rem] mb-0 text-[.9rem] text-ink-muted">{{ stat.label | escape }}</p>{% endif %}
       </li>
       {% endfor %}
     </ul>

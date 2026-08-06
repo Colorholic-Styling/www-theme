@@ -349,10 +349,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 .card__summary { margin: 0; color: var(--ink-soft); font-size: .95rem; }
 .card .link-more { margin-top: auto; align-self: flex-start; }
 
-.feature { list-style: none; }
-.feature__icon { font-size: 1.7rem; line-height: 1; display: block; margin-bottom: .8rem; }
-.feature__name { margin: 0 0 .5rem; font-size: 1.12rem; }
-.feature__text { margin: 0; color: var(--ink-soft); font-size: .96rem; }
+/* Feature items: see sections/features.liquid — utilities. */
 
 /* ── Services / price list ────────────────────────────────── */
 
@@ -369,16 +366,10 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 
 /* ── Steps ────────────────────────────────────────────────── */
 
-.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.6rem; }
-.steps__item { display: flex; gap: 1.1rem; align-items: flex-start; }
-.steps__index {
-  flex-shrink: 0; width: 2.4rem; height: 2.4rem; border-radius: 50%;
-  display: grid; place-items: center; font-family: var(--font-display); font-size: 1rem;
-  background: var(--accent-soft); color: var(--accent-deep);
-}
+/* Base styles live in sections/steps.liquid. What stays here is only what a
+   utility cannot express: the dark section repainting its own descendants.
+   These selectors are unlayered, so they win over the utilities layer. */
 .section--dark .steps__index { background: rgba(255, 255, 255, .12); color: var(--white); }
-.steps__name { margin: .25rem 0 .35rem; font-size: 1.1rem; }
-.steps__text p { margin: 0; color: var(--ink-soft); }
 .section--dark .steps__text p { color: var(--cream-deep); }
 
 /* ── Split (media + text) ─────────────────────────────────── */
@@ -406,10 +397,8 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 
 /* ── Stats ────────────────────────────────────────────────── */
 
-.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.5rem; list-style: none; margin: 0; padding: 0; text-align: center; }
-.stats__value { margin: 0; font-family: var(--font-display); font-size: clamp(2rem, 4vw, 2.8rem); color: var(--accent); }
+/* Base styles live in sections/stats.liquid; only the dark repaint stays. */
 .section--dark .stats__value { color: var(--rose); }
-.stats__label { margin: .3rem 0 0; color: var(--ink-muted); font-size: .9rem; }
 .section--dark .stats__label { color: var(--cream-deep); }
 
 /* ── Team ─────────────────────────────────────────────────── */
@@ -423,8 +412,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 
 /* ── Logos ────────────────────────────────────────────────── */
 
-.logos { display: flex; flex-wrap: wrap; align-items: center; gap: 2.5rem; list-style: none; margin: 0; padding: 0; }
-.logos__item img { max-height: 44px; width: auto; filter: grayscale(1); opacity: .7; }
+/* Nothing here: sections/logos.liquid carries its own utilities. */
 
 /* ── FAQ ──────────────────────────────────────────────────── */
 

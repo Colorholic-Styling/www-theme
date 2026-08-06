@@ -95,12 +95,12 @@
   <div class="section__inner">
     {% render '/snippets/section-head', settings: section.settings %}
 
-    <ul class="logos">
+    <ul class="flex flex-wrap items-center gap-10 m-0 p-0 list-none">
       {% for row in logos %}
       {% assign logo = row.settings | default: row %}
-      <li class="logos__item">
+      <li>
         {% if logo.href != blank %}<a href="{{ logo.href | escape }}" target="_blank" rel="noopener noreferrer">{% endif %}
-        <img src="{{ logo.src | escape }}" alt="{{ logo.name | escape }}" loading="lazy">
+        <img class="max-h-11 w-auto grayscale opacity-70" src="{{ logo.src | escape }}" alt="{{ logo.name | escape }}" loading="lazy">
         {% if logo.href != blank %}</a>{% endif %}
       </li>
       {% endfor %}

@@ -90,14 +90,25 @@
   <div class="section__inner">
     {% render '/snippets/section-head', settings: section.settings %}
 
-    <ol class="steps">
+    {%- comment -%}
+      steps__index and steps__text are kept as hooks, not for their own styling
+      — the base styles are utilities now — but because the dark theme repaints
+      them from the section wrapper (.section--dark .steps__index). That
+      selector is unlayered, so it still wins over the utilities layer.
+    {%- endcomment -%}
+    <ol class="grid gap-[1.6rem] m-0 p-0 list-none">
       {% for row in steps %}
       {% assign step = row.settings | default: row %}
-      <li class="steps__item">
-        <span class="steps__index" aria-hidden="true">{{ step.index | default: forloop.index }}</span>
+      <li class="flex gap-[1.1rem] items-start">
+        {%- comment -%}
+          text-[1rem] rather than text-base: Tailwind's named sizes also set a
+          line-height (1.5), where the original rule set font-size alone and
+          inherited body's 1.75. Arbitrary sizes carry no line-height.
+        {%- endcomment -%}
+        <span class="steps__index shrink-0 w-[2.4rem] h-[2.4rem] rounded-[50%] grid place-items-center font-display text-[1rem] bg-accent-soft text-accent-deep" aria-hidden="true">{{ step.index | default: forloop.index }}</span>
         <div class="steps__text">
-          {% if step.name != blank %}<h3 class="steps__name">{{ step.name | escape }}</h3>{% endif %}
-          {% if step.description != blank %}<p>{{ step.description | escape }}</p>{% endif %}
+          {% if step.name != blank %}<h3 class="mt-1 mb-[.35rem] text-[1.1rem]">{{ step.name | escape }}</h3>{% endif %}
+          {% if step.description != blank %}<p class="m-0 text-ink-soft">{{ step.description | escape }}</p>{% endif %}
         </div>
       </li>
       {% endfor %}

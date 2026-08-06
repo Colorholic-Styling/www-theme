@@ -111,17 +111,33 @@
 
 {% assign features = section.settings.features | default: section.blocks %}
 
+{%- comment -%}
+  Column classes are spelled out per case: Tailwind scans for literal strings,
+  so `grid-cols-{{ columns }}` compiles to nothing and fails silently.
+
+  The old .card-grid collapsed 3/4 columns to 2 below 900px and to 1 below
+  720px; `nav:` (721px) and `wide:` (901px) are the mobile-first complements of
+  those two queries. .card-grid itself stays in the stylesheet — team,
+  testimonials and both news sections still use it.
+{%- endcomment -%}
+{% assign columns = section.settings.columns | default: 3 %}
+{% case columns %}
+  {% when 2, '2' %}{% assign column_classes = 'grid-cols-1 nav:grid-cols-2' %}
+  {% when 4, '4' %}{% assign column_classes = 'grid-cols-1 nav:grid-cols-2 wide:grid-cols-4' %}
+  {% else %}{% assign column_classes = 'grid-cols-1 nav:grid-cols-2 wide:grid-cols-3' %}
+{% endcase %}
+
 <section class="section section--{{ section.settings.theme | escape }}"{% if section.settings.anchor != blank %} id="{{ section.settings.anchor | escape }}"{% endif %}>
   <div class="section__inner">
     {% render '/snippets/section-head', settings: section.settings %}
 
-    <ul class="card-grid card-grid--{{ section.settings.columns | default: 3 }}">
+    <ul class="grid gap-7 m-0 p-0 list-none {{ column_classes }}">
       {% for row in features %}
       {% assign feature = row.settings | default: row %}
-      <li class="feature">
-        {% if feature.icon != blank %}<span class="feature__icon" aria-hidden="true">{{ feature.icon | escape }}</span>{% endif %}
-        {% if feature.name != blank %}<h3 class="feature__name">{{ feature.name | escape }}</h3>{% endif %}
-        {% if feature.description != blank %}<p class="feature__text">{{ feature.description | escape }}</p>{% endif %}
+      <li class="list-none">
+        {% if feature.icon != blank %}<span class="block text-[1.7rem] leading-none mb-[.8rem]" aria-hidden="true">{{ feature.icon | escape }}</span>{% endif %}
+        {% if feature.name != blank %}<h3 class="m-0 mb-2 text-[1.12rem]">{{ feature.name | escape }}</h3>{% endif %}
+        {% if feature.description != blank %}<p class="m-0 text-[.96rem] text-ink-soft">{{ feature.description | escape }}</p>{% endif %}
       </li>
       {% endfor %}
     </ul>
