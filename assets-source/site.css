@@ -163,7 +163,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 .site-header__inner {
   position: relative;
   max-width: var(--shell); margin: 0 auto; padding: .85rem 1.25rem;
-  display: flex; align-items: center; gap: 1rem; justify-content: space-between;
+  display: flex; align-items: center; gap: 1rem; 
 }
 
 .brand { display: inline-flex; align-items: center; text-decoration: none; color: var(--ink); }
