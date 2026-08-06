@@ -54,3 +54,28 @@ compiled stylesheet would count as "used" and nothing would ever prune.
 Markup currently uses semantic classes (`.hero__title`, `.card`, `.price-list__item`)
 rather than utilities, so the utilities layer compiles to almost nothing today.
 Utilities are available for new markup without any further setup.
+
+## Pushing
+
+```bash
+npm run push                 # build, then upload the whole theme
+npm run push -- --dry-run    # list what would be uploaded
+npm run push -- --only hero  # upload just the paths matching "hero"
+npm run push -- --no-build   # upload without rebuilding first
+```
+
+Target defaults to `cms-themes/t/85b4297c328c3117/www-theme`; override with the
+`THEME_BUCKET` / `THEME_PREFIX` environment variables.
+
+Every file is uploaded each time rather than diffed against the bucket.
+Wrangler has no HEAD for objects, so working out what changed would mean
+downloading each one first — the same number of round trips as just writing
+them. A full push is about 15 seconds.
+
+Two things that will mislead you when checking a push landed:
+
+- `wrangler r2 object get` serves a **cached** copy and can report the previous
+  version for a while after a successful write. Verify against the site
+  (`curl -s <site>/assets/site.css | md5`), not against wrangler.
+- Warm Worker isolates cache theme files for their lifetime, so a push reaches
+  requests gradually rather than all at once.
