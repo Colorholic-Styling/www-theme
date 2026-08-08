@@ -100,19 +100,18 @@
 {% endschema %}
 
 {%- comment -%}
-  Same three-source rule as sections/news-list.liquid:
+  Same resource rule as sections/news-list.liquid:
 
     section.settings.members — a CMS `team` block, projected by src/blocks.ts
-    teamMembers              — every published `team_member` page, lightest page
-                               weight first. A JSON route template reads the
-                               list from here because its section settings are
-                               strings and cannot hold one.
+    pages_by_type['team_member'].pages — published team pages declared by the
+                                         JSON route template, lightest weight first
+    teamMembers              — temporary compatibility alias during rollout
     section.blocks           — members written into a JSON template by hand
 
   `href` is set only for members that are pages of their own; a hand-written row
   has none and simply renders without a link.
 {%- endcomment -%}
-{% assign members = section.settings.members | default: teamMembers | default: section.blocks %}
+{% assign members = section.settings.members | default: pages_by_type['team_member'].pages | default: teamMembers | default: section.blocks %}
 
 <section class="section section--{{ section.settings.theme | escape }}"{% if section.settings.anchor != blank %} id="{{ section.settings.anchor | escape }}"{% endif %}>
   <div class="section__inner">
@@ -130,9 +129,9 @@
         {%- endcomment -%}
         {% if member.href != blank %}<a class="member__link" href="{{ member.href | escape }}">{% endif %}
         {% if member.picture != blank %}
-        <img class="member__photo" src="{{ member.picture | escape }}" alt="{{ member.name | escape }}" loading="lazy">
+        <img class="rounded-full aspect-square block mb-4 w-full" src="{{ member.picture | escape }}" alt="{{ member.name | escape }}" loading="lazy" width="100" height="100">
         {% else %}
-        <span class="member__photo member__photo--empty" aria-hidden="true"></span>
+        <span class="rounded-full aspect-square block mb-4 w-full bg-[#f3ced1]" aria-hidden="true"></span>
         {% endif %}
         <h3 class="member__name">{{ member.name | escape }}</h3>
         {% if member.href != blank %}</a>{% endif %}

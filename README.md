@@ -48,30 +48,71 @@ Repeatable rows are read with the same two lines everywhere:
 {% for row in features %}{% assign feature = row.settings | default: row %}
 ```
 
-### The three page-backed lists
+### Declared page-backed resources
 
 `news-list`, `team` and `services` list **published pages**, not rows typed into
 the block, so adding an analyst or a service is one CMS page rather than an edit
-to the homepage. Those sections take one extra fallback:
+to the homepage. The route template declares those dependencies once:
+
+```json
+"resources": {
+  "pages_by_type": {
+    "service": {
+      "limit": 60,
+      "sort": "weight",
+      "order": "asc",
+      "group_by": {
+        "tag_taxonomy": "categories",
+        "include_untagged": true
+      }
+    },
+    "team_member": { "limit": 60, "sort": "weight", "order": "asc" },
+    "news": { "limit": 6, "sort": "published_at", "order": "desc" }
+  }
+}
+```
+
+The Worker validates the declaration, fetches all three resources in one
+bounded database batch, and exposes each resource by page type:
 
 ```liquid
-{% assign news = section.settings.news | default: latestNews | default: section.blocks %}
+{% assign services = pages_by_type['service'].pages %}
+{% for service in pages_by_type['service'].pages %}...{% endfor %}
+
+{% for group in pages_by_type['service'].groups %}
+  <h3>{{ group.name }}</h3>
+  {% for service in group.pages %}...{% endfor %}
+{% endfor %}
 ```
 
 - `section.settings.*` — a CMS block, projected by the Worker.
-- `latestNews` / `teamMembers` / `serviceList` — route globals. **This middle
-  step exists because a JSON section setting cannot hold a list**: its values are
-  strings evaluated as Liquid, so `page.json` can hand a section a title but not
-  an array. Before this, `page.json` declared three news cards and three team
-  members by hand, and the homepage showed exactly three of each forever.
+- `pages_by_type['news']`, `pages_by_type['team_member']`, and
+  `pages_by_type['service']` — declared page-resource objects. Every resource
+  has `.pages`; a resource with `group_by` also fills `.groups`.
+- `latestNews` / `teamMembers` / `serviceList` — temporary compatibility aliases
+  while the editor, site Worker, and theme are deployed independently.
 - `section.blocks` — rows written into a JSON template by hand.
 
 `default` treats an empty array as absent, which is what makes the chain fall
 through rather than render an empty grid.
 
-`teamMembers` rows carry an `href` and `serviceList` rows a `detailHref`, both
-pointing at that item's own page. Hand-written rows have neither and simply
-render without the link, so guard on `!= blank` rather than assuming it is set.
+Team resource rows carry an `href` and service resource rows a `detailHref`,
+both pointing at that item's own page. Hand-written rows have neither and
+simply render without the link, so guard on `!= blank` rather than assuming it
+is set.
+
+### Service category tabs
+
+`services` splits its rows into tabs — the Fresha booking page's grouping, and
+the reason the homepage is not one twelve-row scroll. For CMS service pages,
+the tabs are `pages_by_type['service'].groups`, built from tags in the
+`categories` taxonomy. Tag weight controls tab order, translated tag names are
+used as labels, and a service tagged in two categories appears in both groups.
+The optional untagged group is shown last.
+
+Hand-written section rows still support their older `category` field as a
+fallback. That fallback is used only when every row has a category and there is
+more than one distinct value.
 
 ### The escaping rule
 
@@ -79,7 +120,7 @@ Every value is printed with `| escape`. The **only** exception is a key ending
 in `Html` (`bodyHtml`, `answerHtml`), which holds rich text already sanitised by
 the Worker. Keep that convention: it and the site's strict CSP are the
 stored-XSS boundary. The CSP also forbids inline `<style>`/`<script>`, which is
-why the mobile menu and the FAQ are CSS-only.
+why the mobile menu, the FAQ and the service tabs are CSS-only.
 
 ## Working on it
 

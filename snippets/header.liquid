@@ -14,7 +14,7 @@
 {%- endcomment -%}
 <header class="site-header{% if site.logo != blank %} site-header--badge{% endif %}">
   <div class="site-header__inner justify-end">
-    <a class="brand border-0 md:border md:border-[#ebdbdc] border-t-0 rounded-b-sm shadow-none md:shadow" href="{{ site.homeHref | escape }}">
+    <a class="brand border-0 md:border md:border-[#ebdbdc] md:border-t-0 rounded-b-sm shadow-none md:shadow" href="{{ site.homeHref | escape }}">
       {% if site.logo != blank %}
         <img class="brand__logo" src="{{ site.logo | escape }}" alt="{{ site.brand | escape }}" width="240" height="240">
       {% else %}

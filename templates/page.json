@@ -1,5 +1,28 @@
 {
   "layout": "default",
+  "resources": {
+    "pages_by_type": {
+      "service": {
+        "limit": 60,
+        "sort": "weight",
+        "order": "asc",
+        "group_by": {
+          "tag_taxonomy": "categories",
+          "include_untagged": true
+        }
+      },
+      "team_member": {
+        "limit": 60,
+        "sort": "weight",
+        "order": "asc"
+      },
+      "news": {
+        "limit": 6,
+        "sort": "published_at",
+        "order": "desc"
+      }
+    }
+  },
   "sections": {
     "hero": {
       "type": "hero",

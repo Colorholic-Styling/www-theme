@@ -1,0 +1,25 @@
+{%- comment -%}
+  One row of a price list, rendered with `service:` already normalised — the
+  caller resolves `row.settings | default: row`, not this snippet.
+
+  Extracted so sections/services.liquid renders the same row whether the list
+  is flat or split across category tabs.
+{%- endcomment -%}
+<li class="price-list__item">
+  <div class="price-list__text">
+    <h3 class="price-list__name">
+      {% if service.detailHref != blank %}<a href="{{ service.detailHref | escape }}">{{ service.name | escape }}</a>{% else %}{{ service.name | escape }}{% endif %}
+    </h3>
+    {% if service.description != blank %}<p class="price-list__desc">{{ service.description | escape }}</p>{% endif %}
+    {% if service.duration != blank %}<p class="price-list__meta">{{ service.duration | escape }}</p>{% endif %}
+    {% if service.detailHref != blank %}
+    <p class="price-list__more"><a class="link-more" href="{{ service.detailHref | escape }}">{{ t.serviceDetail | escape }}</a></p>
+    {% endif %}
+  </div>
+  <div class="price-list__side">
+    {% if service.price != blank %}<p class="price-list__price">{{ service.price | escape }}</p>{% endif %}
+    {% if service.href != blank %}
+    <a class="button button--ghost button--sm" href="{{ service.href | escape }}" target="_blank" rel="noopener noreferrer">{% if service.label != blank %}{{ service.label | escape }}{% else %}{{ t.book | escape }}{% endif %}</a>
+    {% endif %}
+  </div>
+</li>

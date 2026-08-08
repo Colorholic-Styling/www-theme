@@ -115,19 +115,18 @@
 {% endschema %}
 
 {%- comment -%}
-  Three sources for the same article shape, first non-empty wins:
+  Resource sources for the same article shape, first non-empty wins:
 
     section.settings.news — a CMS `news-list` block, projected by src/blocks.ts
-    latestNews            — the route's latest articles, newest publish date
-                            first. This is what a JSON route template uses: its
-                            section settings are strings, so it can hand this
-                            section a title but never a list.
+    pages_by_type['news'].pages — articles declared by the JSON route template,
+                                  newest publish date first
+    latestNews            — temporary compatibility alias during rollout
     section.blocks        — articles written into a JSON template by hand
 
   `default` treats an empty array as absent, so an unpublished news archive
   falls through to the next source rather than rendering an empty grid.
 {%- endcomment -%}
-{% assign news = section.settings.news | default: latestNews | default: section.blocks %}
+{% assign news = section.settings.news | default: pages_by_type['news'].pages | default: latestNews | default: section.blocks %}
 <section class="section section--{{ section.settings.theme | escape }}"{% if section.settings.anchor != blank %} id="{{ section.settings.anchor | escape }}"{% endif %}>
   <div class="section__inner">
     {% render '/snippets/section-head', settings: section.settings %}

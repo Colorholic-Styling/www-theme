@@ -384,6 +384,40 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 .price-list__side { display: flex; flex-direction: column; align-items: flex-end; gap: .6rem; flex-shrink: 0; }
 .price-list__price { margin: 0; font-family: var(--font-display); font-size: 1.2rem; white-space: nowrap; }
 
+/* ── Tabs (CSS-only) ──────────────────────────────────────── */
+
+/* Used by sections/services.liquid to split a long price list by category, the
+   way the Fresha booking page does. No JavaScript, so the CSP holds: the markup
+   is a radio group repeating `input + label + panel`, and flex `order` pulls
+   every label up into a chip row above the panels — which is what keeps this to
+   two adjacent-sibling rules instead of one pair per tab index. */
+.tabs { position: relative; display: flex; flex-wrap: wrap; gap: .55rem; }
+
+/* Off-screen rather than display:none, so it stays keyboard-focusable and the
+   arrow keys still walk the group. */
+.tabs__radio {
+  position: absolute; width: 1px; height: 1px;
+  opacity: 0; margin: 0; pointer-events: none;
+}
+.tabs__label {
+  order: 1; cursor: pointer; white-space: nowrap;
+  padding: .5rem 1.05rem; border: 1px solid var(--line); border-radius: 999px;
+  font-size: .9rem; color: var(--ink-soft); background: var(--white);
+  transition: color .18s ease, background .18s ease, border-color .18s ease;
+}
+.tabs__label:hover { color: var(--ink); border-color: var(--rose); }
+.tabs__radio:checked + .tabs__label {
+  background: var(--accent); border-color: var(--accent); color: var(--white);
+}
+.tabs__radio:focus-visible + .tabs__label { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.tabs__panel { order: 2; width: 100%; display: none; margin-top: 1.1rem; }
+.tabs__radio:checked + .tabs__label + .tabs__panel { display: block; }
+
+.section--cream .tabs__label { background: transparent; }
+.section--dark .tabs__label { background: transparent; border-color: rgba(255, 255, 255, .22); color: var(--cream-deep); }
+.section--dark .tabs__label:hover { color: var(--white); border-color: var(--rose); }
+
 /* ── Steps ────────────────────────────────────────────────── */
 
 /* Base styles live in sections/steps.liquid. What stays here is only what a
@@ -428,7 +462,6 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
    whole tile head is the target rather than the name alone. */
 .member__link { display: block; color: inherit; text-decoration: none; }
 .member__link:hover .member__name { color: var(--accent); }
-.member__photo { display: block; border-radius: var(--radius); aspect-ratio: 4 / 5; object-fit: cover; width: 100%; margin-bottom: 1rem; }
 .member__photo--empty { background: var(--rose-tint); }
 .member__name { margin: 0 0 .2rem; font-size: 1.12rem; }
 .member__role { margin: 0 0 .6rem; color: var(--accent); font-size: .88rem; letter-spacing: .06em; }
@@ -534,6 +567,8 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   .card-grid--2, .card-grid--3, .card-grid--4, .split, .contact { grid-template-columns: 1fr; }
   .profile__head { grid-template-columns: 1fr; }
   .profile__photo { max-width: 260px; }
+  .tabs { gap: .45rem; }
+  .tabs__label { padding: .45rem .85rem; font-size: .85rem; white-space: normal; }
   .price-list__item { flex-direction: column; gap: .9rem; }
   .price-list__side { align-items: flex-start; flex-direction: row; align-items: center; gap: 1rem; }
   .site-footer__inner { grid-template-columns: 1fr; }

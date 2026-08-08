@@ -12,6 +12,7 @@
 <meta name="twitter:card" content="{% if meta.image != blank %}summary_large_image{% else %}summary{% endif %}">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="#221c1c">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 {% for language in languages %}<link rel="alternate" hreflang="{{ language.code | escape }}" href="{{ canonicalOrigin | escape }}{{ language.href | escape }}">
 {% endfor %}{%- comment -%}
   `assetVersion` is the Worker's deploy id, so it only moves on a redeploy —

@@ -85,6 +85,11 @@
         },
         {
           "type": "text",
+          "id": "category",
+          "label": "Category"
+        },
+        {
+          "type": "text",
           "id": "duration",
           "label": "Duration"
         },
@@ -115,47 +120,98 @@
 {% endschema %}
 
 {%- comment -%}
-  Same three-source rule as sections/news-list.liquid:
+  Same resource rule as sections/news-list.liquid:
 
     section.settings.services — a CMS `services` block, projected by src/blocks.ts
-    serviceList               — every published `service` page, lightest page
-                                weight first. A JSON route template reads the
-                                list from here because its section settings are
-                                strings and cannot hold one.
+    pages_by_type['service'].pages  — published `service` pages declared by the
+                                      JSON route template, lightest weight first
+    pages_by_type['service'].groups — the same pages grouped by category tag
+    serviceList               — temporary compatibility alias during rollout
     section.blocks            — services written into a JSON template by hand
 
   `href` is the booking link in every source. `detailHref` is set only for
   services that are pages of their own; a hand-written row has none and simply
   renders without the "full detail" link.
 {%- endcomment -%}
-{% assign services = section.settings.services | default: serviceList | default: section.blocks %}
+{% assign serviceResource = pages_by_type['service'] %}
+{% assign services = section.settings.services | default: serviceResource.pages | default: serviceList | default: section.blocks %}
+{% assign resourceGroups = serviceResource.groups %}
+{% assign resourceGrouped = false %}
+{% if section.settings.services == blank and resourceGroups.size > 1 %}{% assign resourceGrouped = true %}{% endif %}
+
+{%- comment -%}
+  Category tabs, the way the Fresha booking page groups the same list: the price
+  list runs to a dozen rows, which is a long scroll on the homepage.
+
+  Tabs are opt-in by the data, not by a setting: they appear only when EVERY
+  service carries a `category` and there is more than one distinct value.
+  A part-categorised list would silently drop the rows with no category, and a
+  single tab is just a heading with extra clicks — both fall back to the flat
+  list below.
+
+  `where: 'category'` cannot do the counting on its own: Liquid treats an empty
+  string as truthy, so a blank category still passes it. Hence the loop, which
+  skips blanks and adds up only what a tab would actually show.
+{%- endcomment -%}
+{% assign categories = services | map: 'category' | uniq %}
+{% assign tabCount = 0 %}
+{% assign taggedCount = 0 %}
+{% for category in categories %}
+  {% if category == blank %}{% continue %}{% endif %}
+  {% assign tabCount = tabCount | plus: 1 %}
+  {% assign categoryRows = services | where: 'category', category %}
+  {% assign taggedCount = taggedCount | plus: categoryRows.size %}
+{% endfor %}
+{% assign tabbed = false %}
+{% if tabCount > 1 and taggedCount == services.size %}{% assign tabbed = true %}{% endif %}
+{% assign tabId = section.settings.anchor | default: section.id | default: 'services' %}
 
 <section class="section section--{{ section.settings.theme | escape }}"{% if section.settings.anchor != blank %} id="{{ section.settings.anchor | escape }}"{% endif %}>
   <div class="section__inner">
     {% render '/snippets/section-head', settings: section.settings %}
 
-    {% if services.size > 0 %}
+    {% if resourceGrouped %}
+    <div class="tabs">
+      {% for group in resourceGroups %}
+      <input class="tabs__radio" type="radio" name="{{ tabId | escape }}-tab" id="{{ tabId | escape }}-tag-{{ forloop.index }}"{% if forloop.first %} checked{% endif %}>
+      <label class="tabs__label" for="{{ tabId | escape }}-tag-{{ forloop.index }}">{{ group.name | escape }}</label>
+      <div class="tabs__panel">
+        <ul class="price-list">
+          {% for service in group.pages %}
+          {% render '/snippets/price-row', service: service %}
+          {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+    </div>
+    {% elsif tabbed %}
+    {%- comment -%}
+      A radio group, not JavaScript — the CSP forbids inline script, the same
+      reason the FAQ is a <details> and the mobile menu a checkbox. Each tab is
+      `input + label + panel` in DOM order so the whole thing is two adjacent
+      sibling selectors and no per-tab CSS; flex `order` lifts the labels into a
+      row above the panels. Same `name` on every radio, so the arrow keys move
+      between tabs for free.
+    {%- endcomment -%}
+    <div class="tabs">
+      {% for category in categories %}
+      {% assign categoryRows = services | where: 'category', category %}
+      <input class="tabs__radio" type="radio" name="{{ tabId | escape }}-tab" id="{{ tabId | escape }}-tab-{{ forloop.index }}"{% if forloop.first %} checked{% endif %}>
+      <label class="tabs__label" for="{{ tabId | escape }}-tab-{{ forloop.index }}">{{ category | escape }}</label>
+      <div class="tabs__panel">
+        <ul class="price-list">
+          {% for service in categoryRows %}
+          {% render '/snippets/price-row', service: service %}
+          {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+    </div>
+    {% elsif services.size > 0 %}
     <ul class="price-list">
       {% for row in services %}
       {% assign service = row.settings | default: row %}
-      <li class="price-list__item">
-        <div class="price-list__text">
-          <h3 class="price-list__name">
-            {% if service.detailHref != blank %}<a href="{{ service.detailHref | escape }}">{{ service.name | escape }}</a>{% else %}{{ service.name | escape }}{% endif %}
-          </h3>
-          {% if service.description != blank %}<p class="price-list__desc">{{ service.description | escape }}</p>{% endif %}
-          {% if service.duration != blank %}<p class="price-list__meta">{{ service.duration | escape }}</p>{% endif %}
-          {% if service.detailHref != blank %}
-          <p class="price-list__more"><a class="link-more" href="{{ service.detailHref | escape }}">{{ t.serviceDetail | escape }}</a></p>
-          {% endif %}
-        </div>
-        <div class="price-list__side">
-          {% if service.price != blank %}<p class="price-list__price">{{ service.price | escape }}</p>{% endif %}
-          {% if service.href != blank %}
-          <a class="button button--ghost button--sm" href="{{ service.href | escape }}" target="_blank" rel="noopener noreferrer">{% if service.label != blank %}{{ service.label | escape }}{% else %}{{ t.book | escape }}{% endif %}</a>
-          {% endif %}
-        </div>
-      </li>
+      {% render '/snippets/price-row', service: service %}
       {% endfor %}
     </ul>
     {% endif %}
