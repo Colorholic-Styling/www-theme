@@ -16,9 +16,9 @@ npm run build:css:debug    # readable output, for diffing a change
 npm run watch:css          # rebuild on save
 ```
 
-The output is committed rather than ignored: the Worker reads the theme from
-the `cms-themes` R2 bucket, and the push is a straight file copy out of this
-repo, so the compiled stylesheet has to exist here.
+The output is committed rather than ignored: the Worker reads the theme from the
+CMS media bucket, and the push is a straight file copy out of this repo, so the
+compiled stylesheet has to exist here.
 
 ## Why Tailwind is imported without preflight
 
@@ -64,8 +64,10 @@ npm run push -- --only hero  # upload just the paths matching "hero"
 npm run push -- --no-build   # upload without rebuilding first
 ```
 
-Target defaults to `cms-themes/t/85b4297c328c3117/www-theme`; override with the
-`THEME_BUCKET` / `THEME_PREFIX` environment variables.
+Target defaults to `worker-cms-media/themes/t/85b4297c328c3117/www-theme` — the
+CMS media bucket, which replaced the retired standalone `cms-themes` bucket.
+Override with the `THEME_BUCKET` / `THEME_PREFIX` environment variables, and keep
+them in step with `colorholic-www`'s `THEMES` binding and `THEME_PREFIX` var.
 
 Every file is uploaded each time rather than diffed against the bucket.
 Wrangler has no HEAD for objects, so working out what changed would mean

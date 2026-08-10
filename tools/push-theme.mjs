@@ -22,8 +22,12 @@ import { promisify } from 'node:util';
 const run = promisify(execFile);
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 
-const BUCKET = process.env.THEME_BUCKET ?? 'cms-themes';
-const PREFIX = (process.env.THEME_PREFIX ?? 't/85b4297c328c3117/www-theme').replace(/^\/+|\/+$/g, '');
+// The theme library moved into the CMS's own media bucket, below `themes/` —
+// the standalone `cms-themes` bucket is retired. These must match what
+// colorholic-www binds as THEMES and reads as THEME_PREFIX; a push to the old
+// bucket succeeds and changes nothing the site can see.
+const BUCKET = process.env.THEME_BUCKET ?? 'worker-cms-media';
+const PREFIX = (process.env.THEME_PREFIX ?? 'themes/t/85b4297c328c3117/www-theme').replace(/^\/+|\/+$/g, '');
 
 // The directories the Worker reads. assets-source/, tools/ and the npm files
 // are build inputs and must not reach the bucket.

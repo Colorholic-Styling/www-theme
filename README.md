@@ -2,11 +2,12 @@
 
 The 0xCMS theme for **Colorholic Styling 析色生妝學院** — the Liquid views and the
 Tailwind-built stylesheet that [`colorholic-www`](../website) renders published
-CMS pages through. The Worker reads these files from the `cms-themes` R2 bucket,
-so a push here changes the live site with no redeploy.
+CMS pages through. The Worker reads these files from the CMS's own media bucket
+(`worker-cms-media`, under `themes/`), so a push here changes the live site with
+no redeploy.
 
 ```
-www-theme ──push──▶ cms-themes (R2) ──read──▶ colorholic-www ──HTML──▶ visitor
+www-theme ──push──▶ worker-cms-media/themes/… ──read──▶ colorholic-www ──HTML──▶ visitor
 ```
 
 | Directory | Holds |
