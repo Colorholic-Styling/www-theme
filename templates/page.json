@@ -7,7 +7,7 @@
         "sort": "weight",
         "order": "asc",
         "group_by": {
-          "tag_taxonomy": "categories",
+          "tag_taxonomy": "collections",
           "include_untagged": true
         }
       },

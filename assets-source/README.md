@@ -64,7 +64,7 @@ npm run push -- --only hero  # upload just the paths matching "hero"
 npm run push -- --no-build   # upload without rebuilding first
 ```
 
-Target defaults to `worker-cms-media/themes/t/85b4297c328c3117/www-theme` — the
+Target defaults to `worker-cms-media/themes/t/85b4297c328c3117/colorholic` — the
 CMS media bucket, which replaced the retired standalone `cms-themes` bucket.
 Override with the `THEME_BUCKET` / `THEME_PREFIX` environment variables, and keep
 them in step with `colorholic-www`'s `THEMES` binding and `THEME_PREFIX` var.

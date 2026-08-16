@@ -27,7 +27,7 @@ const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 // colorholic-www binds as THEMES and reads as THEME_PREFIX; a push to the old
 // bucket succeeds and changes nothing the site can see.
 const BUCKET = process.env.THEME_BUCKET ?? 'worker-cms-media';
-const PREFIX = (process.env.THEME_PREFIX ?? 'themes/t/85b4297c328c3117/www-theme').replace(/^\/+|\/+$/g, '');
+const PREFIX = (process.env.THEME_PREFIX ?? 'themes/t/85b4297c328c3117/colorholic').replace(/^\/+|\/+$/g, '');
 
 // The directories the Worker reads. assets-source/, tools/ and the npm files
 // are build inputs and must not reach the bucket.
