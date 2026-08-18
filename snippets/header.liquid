@@ -41,19 +41,11 @@
         {% endfor %}
       </ul>
 
+      {% if site.booking.has %}
       <div class="site-nav__aside">
-        <ul class="lang-switch">
-          {% for language in languages %}
-          <li><a class="lang-switch__link{% if language.active %} is-active{% endif %}"
-                 href="{{ language.href | escape }}"
-                 lang="{{ language.code | escape }}"
-                 {% if language.active %}aria-current="true"{% endif %}>{{ language.label | escape }}</a></li>
-          {% endfor %}
-        </ul>
-        {% if site.booking.has %}
         <a class="button button--primary button--sm" href="{{ site.booking.href | escape }}" target="_blank" rel="noopener noreferrer">{{ site.booking.label | escape }}</a>
-        {% endif %}
       </div>
+      {% endif %}
     </nav>
   </div>
 </header>

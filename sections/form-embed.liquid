@@ -1,0 +1,123 @@
+{% schema %}
+{
+  "name": "Embedded form",
+  "settings": [
+    { "type": "text", "id": "anchor", "label": "Anchor" },
+    { "type": "select", "id": "theme", "label": "Theme", "options": [
+      { "value": "light", "label": "Light" },
+      { "value": "cream", "label": "Cream" },
+      { "value": "dark", "label": "Dark" },
+      { "value": "accent", "label": "Accent" }
+    ] },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "title", "label": "Title" },
+    { "type": "richtext", "id": "bodyHtml", "label": "Body" }
+  ]
+}
+{% endschema %}
+
+{% assign form = section.settings.form %}
+<section class="section section--{{ section.settings.theme | escape }} waitlist-form"{% if section.settings.anchor != blank %} id="{{ section.settings.anchor | escape }}"{% endif %}>
+  <div class="section__inner section__inner--narrow">
+    <div class="waitlist-form__card">
+      <div class="waitlist-form__intro">
+        {% if section.settings.eyebrow != blank %}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}
+        {% if section.settings.title != blank %}<h2 class="waitlist-form__title">{{ section.settings.title | escape }}</h2>{% endif %}
+        {% if section.settings.bodyHtml != blank %}<div class="waitlist-form__body prose">{{ section.settings.bodyHtml }}</div>{% endif %}
+      </div>
+
+      {% unless section.settings.hasForm %}
+        <p class="waitlist-form__notice">{{ section.settings.unavailableMessage | escape }}</p>
+      {% else %}
+        {% if form.success %}
+          <div class="waitlist-form__success" role="status">
+            <span class="waitlist-form__success-mark" aria-hidden="true">✓</span>
+            <h3>{{ form.successTitle | escape }}</h3>
+            <div class="prose">{{ form.successBodyHtml }}</div>
+          </div>
+        {% elsif form.open == false %}
+          <p class="waitlist-form__notice">{{ form.closedMessage | escape }}</p>
+        {% else %}
+          {% if form.description != blank %}<p class="waitlist-form__description">{{ form.description | escape }}</p>{% endif %}
+          {% if form.error != blank %}<div class="waitlist-form__error" role="alert">{{ form.error | escape }}</div>{% endif %}
+
+          <form class="waitlist-form__form" method="post" action="{{ form.action | escape }}">
+            <input type="hidden" name="form-ref" value="{{ form.slug | escape }}">
+            <label class="waitlist-form__honeypot" aria-hidden="true">
+              Website
+              <input type="text" name="website" value="" tabindex="-1" autocomplete="off">
+            </label>
+
+            <div class="waitlist-form__fields">
+              {% if form.hasContact %}
+                <label class="waitlist-form__field">
+                  <span>{{ form.contact.nameLabel | escape }} <span aria-hidden="true">*</span></span>
+                  <input type="text" name="contact-name" value="{{ form.contact.nameValue | escape }}" autocomplete="name" required>
+                </label>
+                <label class="waitlist-form__field">
+                  <span>{{ form.contact.emailLabel | escape }}{% if form.contact.requireEmail %} <span aria-hidden="true">*</span>{% endif %}</span>
+                  <input type="email" name="contact-email" value="{{ form.contact.emailValue | escape }}" autocomplete="email"{% if form.contact.requireEmail %} required{% endif %}>
+                </label>
+              {% endif %}
+
+              {% for field in form.fields %}
+                {% case field.type %}
+                  {% when 'radio' %}
+                    <fieldset class="waitlist-form__field waitlist-form__field--wide">
+                      <legend>{{ field.label | escape }}{% if field.required %} <span aria-hidden="true">*</span>{% endif %}</legend>
+                      <div class="waitlist-form__choices">
+                        {% for option in field.options %}
+                          <label class="waitlist-form__choice">
+                            <input type="radio" name="{{ field.name | escape }}" value="{{ option.value | escape }}"{% if option.selected %} checked{% endif %}{% if field.required %} required{% endif %}>
+                            <span>{{ option.label | escape }}</span>
+                          </label>
+                        {% endfor %}
+                      </div>
+                    </fieldset>
+                  {% when 'checkboxes' %}
+                    <fieldset class="waitlist-form__field waitlist-form__field--wide">
+                      <legend>{{ field.label | escape }}{% if field.required %} <span aria-hidden="true">*</span>{% endif %}</legend>
+                      <div class="waitlist-form__choices">
+                        {% for option in field.options %}
+                          <label class="waitlist-form__choice">
+                            <input type="checkbox" name="{{ field.name | escape }}" value="{{ option.value | escape }}"{% if option.selected %} checked{% endif %}>
+                            <span>{{ option.label | escape }}</span>
+                          </label>
+                        {% endfor %}
+                      </div>
+                    </fieldset>
+                  {% when 'select' %}
+                    <label class="waitlist-form__field">
+                      <span>{{ field.label | escape }}{% if field.required %} <span aria-hidden="true">*</span>{% endif %}</span>
+                      <select name="{{ field.name | escape }}"{% if field.required %} required{% endif %}>
+                        <option value=""></option>
+                        {% for option in field.options %}<option value="{{ option.value | escape }}"{% if option.selected %} selected{% endif %}>{{ option.label | escape }}</option>{% endfor %}
+                      </select>
+                    </label>
+                  {% when 'textarea' %}
+                    <label class="waitlist-form__field waitlist-form__field--wide">
+                      <span>{{ field.label | escape }}{% if field.required %} <span aria-hidden="true">*</span>{% endif %}</span>
+                      <textarea name="{{ field.name | escape }}" rows="4"{% if field.required %} required{% endif %}>{{ field.value | escape }}</textarea>
+                    </label>
+                  {% when 'checkbox' %}
+                    <label class="waitlist-form__choice waitlist-form__field--wide">
+                      <input type="checkbox" name="{{ field.name | escape }}" value="yes"{% if field.checked %} checked{% endif %}{% if field.required %} required{% endif %}>
+                      <span>{{ field.label | escape }}{% if field.required %} <span aria-hidden="true">*</span>{% endif %}</span>
+                    </label>
+                  {% else %}
+                    <label class="waitlist-form__field">
+                      <span>{{ field.label | escape }}{% if field.required %} <span aria-hidden="true">*</span>{% endif %}</span>
+                      <input type="{{ field.type | escape }}" name="{{ field.name | escape }}" value="{{ field.value | escape }}" autocomplete="{{ field.autocomplete | escape }}"{% if field.pattern != blank %} pattern="{{ field.pattern | escape }}" title="{{ field.validationTitle | escape }}"{% endif %}{% if field.required %} required{% endif %}>
+                    </label>
+                {% endcase %}
+              {% endfor %}
+            </div>
+
+            <p class="waitlist-form__required"><span aria-hidden="true">*</span> {{ form.requiredLabel | escape }}</p>
+            <button class="button button--primary waitlist-form__submit" type="submit">{{ form.buttonLabel | escape }}</button>
+          </form>
+        {% endif %}
+      {% endunless %}
+    </div>
+  </div>
+</section>
